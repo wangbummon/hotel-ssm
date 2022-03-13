@@ -47,6 +47,9 @@
             <if test="roleName != null and roleName != ''">
                 AND role_name LIKE CONCAT('%',#{roleName},'%')
             </if>
+            <if test="roleCode != null and roleCode != ''">
+                AND role_code LIKE CONCAT('%',#{roleCode},'%')
+            </if>
         </where>
     </select>
     <!--根据用户id查询角色列表-->

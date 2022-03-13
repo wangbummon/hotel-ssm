@@ -58,6 +58,10 @@ public class RoleServiceImpl implements RoleService {
     public RespVO addRole(RolePO params) {
         role = new Role();
         MyBeanUtils.copyProperties(params, role);
+        role.setRoleCode(role.getRoleCode().toUpperCase());
+        if (!role.getRoleCode().startsWith("ROLE_")) {
+            role.setRoleCode("ROLE_" + role.getRoleCode());
+        }
         return CheckUtils.checkSuccess(roleMapper.insert(role));
     }
 

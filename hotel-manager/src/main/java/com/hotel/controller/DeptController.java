@@ -30,7 +30,7 @@ public class DeptController {
 
     @ApiOperation("新增部门")
     @PostMapping("/depts")
-    public RespVO insertDept(DeptPO params) {
+    public RespVO insertDept(@RequestBody DeptPO params) {
         return deptService.insertDept(params);
     }
 
@@ -48,7 +48,7 @@ public class DeptController {
 
     @ApiOperation("查询部门下用户数量")
     @GetMapping("/dept-user/{deptId}")
-    public RespVO getDeptUserCount(@PathVariable Integer deptId){
+    public RespVO getDeptUserCount(@PathVariable Integer deptId) {
         return deptService.getDeptUserCount(deptId);
     }
 }

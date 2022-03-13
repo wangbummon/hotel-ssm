@@ -2,178 +2,258 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <%--获取CSRF Token--%>
+    <meta name="_csrf" content="${_csrf.token}"/>
+    <%--获取CSRF头，默认为X-CSRF-TOKEN--%>
+    <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <meta charset="utf-8">
     <title>layui</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/css/layui.css"
+          media="all">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/public.css" media="all">
 </head>
 <body>
 <div class="layuimini-container">
     <div class="layuimini-main">
 
+        <%--   搜索区域     --%>
         <fieldset class="table-search-fieldset">
             <legend>搜索信息</legend>
             <div style="margin: 10px 10px 10px 10px">
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户姓名</label>
+                            <label class="layui-form-label">角色名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input type="text" name="roleName" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户性别</label>
+                            <label class="layui-form-label">角色代码</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="sex" autocomplete="off" class="layui-input">
+                                <input type="text" name="roleCode" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户城市</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="city" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户职业</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="classify" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
+                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                            </button>
                         </div>
                     </div>
                 </form>
             </div>
         </fieldset>
-
+        <%--头部工具栏--%>
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加</button>
+                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除</button>
             </div>
         </script>
-
+        <%--表格工具栏--%>
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
-
+        <%--行工具栏--%>
         <script type="text/html" id="currentTableBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
+        <%-- 添加窗口 --%>
+        <div style="display: none;padding: 5px" id="addWindow">
+            <form class="layui-form" style="width:90%;" id="addFrm" lay-filter="addFrm">
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 120px">角色代码ROLE_</label>
+                    <div class="layui-input-block">
+                        <%--隐藏域--%>
+                        <input type="hidden" name="id">
+                        <input type="text" name="roleCode" style="width: 500px" lay-verify="required" autocomplete="off"
+                               placeholder="请输入角色代码" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 120px">角色名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="roleName" style="width: 500px" lay-verify="required" autocomplete="off"
+                               placeholder="请输入角色名称"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label" style="width: 120px">角色描述</label>
+                    <div class="layui-input-block">
+                        <textarea class="layui-textarea" style="width: 500px" name="roleDesc" id="addContent"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-row layui-col-xs12">
+                    <div class="layui-input-block" style="text-align: center;">
+                        <button type="button" class="layui-btn" lay-submit lay-filter="doAdd"><span
+                                class="layui-icon layui-icon-add-1"></span>提交
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-warm"><span
+                                class="layui-icon layui-icon-refresh-1"></span>重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <%--修改窗口--%>
+        <div style="display: none;padding: 5px" id="updateWindow">
+            <form class="layui-form" style="width:90%;" id="updateFrm" lay-filter="updateFrm" method="">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色代码</label>
+                    <div class="layui-input-block">
+                        <%--隐藏域--%>
+                        <input type="hidden" name="id">
+                        <input type="text" name="deptCode" lay-verify="required" autocomplete="off"
+                               placeholder="请输入角色代码" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="roleName" lay-verify="required" autocomplete="off"
+                               placeholder="请输入角色名称"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色描述</label>
+                    <div class="layui-input-block">
+                        <textarea class="layui-textarea" name="roleDesc" id="updateContent"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-row layui-col-xs12">
+                    <div class="layui-input-block" style="text-align: center;">
+                        <button type="button" class="layui-btn" lay-submit lay-filter="doEdit"><span
+                                class="layui-icon layui-icon-add-1"></span>提交
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-warm"><span
+                                class="layui-icon layui-icon-refresh-1"></span>重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>
 <script src="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
-    layui.use(['form', 'table'], function () {
+    layui.use(['jquery', 'form', 'table', 'layer'], function () {
         var $ = layui.jquery,
             form = layui.form,
+            layer = layui.layer,
             table = layui.table;
 
-        table.render({
+        //获取<meta>中封装的CSRF Token
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        // 将头中的CSRF Token信息发送出去
+        $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(header, token);
+        });
+
+        var tableIns = table.render({
             elem: '#currentTableId',
-            url: '${pageContext.request.contextPath}/static/layui/api/table.json',
+            url: '${pageContext.request.contextPath}/admin/roles',
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
                 layEvent: 'LAYTABLE_TIPS',
                 icon: 'layui-icon-tips'
             }],
+            request: {
+                pageName: 'pageNum',
+                limitName: 'pageSize'
+            },
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 80, title: 'ID', sort: true},
-                {field: 'username', width: 80, title: '用户名'},
-                {field: 'sex', width: 80, title: '性别', sort: true},
-                {field: 'city', width: 80, title: '城市'},
-                {field: 'sign', title: '签名', minWidth: 150},
-                {field: 'experience', width: 80, title: '积分', sort: true},
-                {field: 'score', width: 80, title: '评分', sort: true},
-                {field: 'classify', width: 80, title: '职业'},
-                {field: 'wealth', width: 135, title: '财富', sort: true},
+                {field: 'id', width: 150, title: '角色编号', sort: true, align: "center"},
+                {field: 'roleCode', width: 350, title: '角色代码', align: "center"},
+                {field: 'roleName', width: 350, title: '角色名称', align: "center"},
+                {field: 'roleDesc', width: 500, title: '角色描述', align: "center"},
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
-            limits: [10, 15, 20, 25, 50, 100],
-            limit: 15,
             page: true,
-            skin: 'line'
+            done: function (res, curr, count) {
+                if (curr > 1 && res.data.lenth === 0) {
+                    tableIns:reload({
+                        page: {curr: curr - 1}
+                    });
+                }
+            }
         });
 
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
-            var result = JSON.stringify(data.field);
-            layer.alert(result, {
-                title: '最终的搜索信息'
-            });
-
-            //执行搜索重载
-            table.reload('currentTableId', {
+            tableIns.reload({
+                where: data.field,//查询条件
                 page: {
                     curr: 1
                 }
-                , where: {
-                    searchParams: result
-                }
-            }, 'data');
+            });
+            var result = JSON.stringify(data.field);
 
             return false;
         });
 
         /**
-         * toolbar监听事件
+         * 表格头部工具栏监听事件
          */
         table.on('toolbar(currentTableFilter)', function (obj) {
-            if (obj.event === 'add') {  // 监听添加操作
-                var index = layer.open({
-                    title: '添加用户',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '${pageContext.request.contextPath}/static/layui/page/table/add.html',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-            } else if (obj.event === 'delete') {  // 监听删除操作
-                var checkStatus = table.checkStatus('currentTableId')
-                    , data = checkStatus.data;
-                layer.alert(JSON.stringify(data));
+            switch (obj.event) {
+                case 'add':
+                    openAddWindow();
+                    break;
             }
         });
 
-        //监听表格复选框选择
-        table.on('checkbox(currentTableFilter)', function (obj) {
-            console.log(obj)
-        });
+        //定义变量 保存提交地址和窗口索引
+        var url, mainIndex;
 
-        table.on('tool(currentTableFilter)', function (obj) {
-            var data = obj.data;
-            if (obj.event === 'edit') {
+        /**
+         * 打开添加窗口
+         */
+        function openAddWindow() {
+            mainIndex = layer.open({
+                type: 1,
+                title: "添加角色",
+                area: ["740px", "380px"],
+                content: $("#addWindow"),
+                success: function () {
+                    $("#addFrm")[0].reset();
+                    url = "/admin/roles"
+                }
+            });
+        }
 
-                var index = layer.open({
-                    title: '编辑用户',
-                    type: 2,
-                    shade: 0.2,
-                    maxmin:true,
-                    shadeClose: true,
-                    area: ['100%', '100%'],
-                    content: '${pageContext.request.contextPath}/static/layui/page/table/edit.html',
-                });
-                $(window).on("resize", function () {
-                    layer.full(index);
-                });
-                return false;
-            } else if (obj.event === 'delete') {
-                layer.confirm('真的删除行么', function (index) {
-                    obj.del();
-                    layer.close(index);
-                });
-            }
+        /**
+         * 监听新增提交事件
+         */
+        form.on('submit(doAdd)', function (data) {
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                success: function (result) {
+                    if (result.code === 0) {
+                        layer.msg(result.msg, {icon: 1})
+                        //数据刷新
+                        tableIns.reload();
+                        //关闭当前窗口
+                        layer.close(mainIndex);
+                    } else {
+                        layer.msg(result.msg, {icon: 2})
+                    }
+                }
+            })
+            return false;
         });
 
     });

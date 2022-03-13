@@ -172,17 +172,21 @@
             }],
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 120, title: '部门编号', sort: true},
-                {field: 'deptName', width: 200, title: '部门名称'},
-                {field: 'address', minWidth: 500, title: '部门地址', sort: true},
-                {field: 'createDate', width: 200, title: '创建时间'},
-                {field: 'remark', title: '备注', minWidth: 120},
-                {title: '操作', width: 150, toolbar: '#currentTableBar', align: "center"}
+                {field: 'id', width: 120, title: '部门编号', sort: true, align: "center"},
+                {field: 'deptName', width: 200, title: '部门名称', align: "center"},
+                {field: 'address', minWidth: 500, title: '部门地址', align: "center"},
+                {field: 'createDate', width: 200, title: '创建时间', align: "center"},
+                {field: 'remark', title: '备注', minWidth: 120, align: "center"},
+                {title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", align: "center"}
             ]],
-            // limits: [10, 15, 20, 25, 50, 100],
-            // limit: 15,
             page: true,
-            // skin: 'line'
+            done: function (res, curr, count) {
+                if (curr > 1 && res.data.lenth === 0) {
+                    tableIns:reload({
+                        page: {curr: curr - 1}
+                    });
+                }
+            }
         });
 
         // 监听搜索操作
@@ -192,7 +196,7 @@
                 page: {
                     curr: 1
                 }
-            })
+            });
             var result = JSON.stringify(data.field);
 
             return false;
@@ -235,7 +239,9 @@
             $.ajax({
                 url: url,
                 type: "POST",
-                data: data.field,
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
                 success: function (result) {
                     if (result.code === 0) {
                         layer.msg(result.msg, {icon: 1})

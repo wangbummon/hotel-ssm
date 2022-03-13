@@ -30,7 +30,7 @@ public class RoleController {
 
     @ApiOperation("新增角色")
     @PostMapping("/roles")
-    public RespVO addRole(RolePO params){
+    public RespVO addRole(@RequestBody RolePO params){
         return roleService.addRole(params);
     }
 
