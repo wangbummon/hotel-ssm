@@ -2,6 +2,7 @@ package com.hotel.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.hotel.mapper.RoleMapper;
+import com.hotel.mapper.UserRoleMapper;
 import com.hotel.mapper.UsersMapper;
 import com.hotel.pojo.entity.Role;
 import com.hotel.pojo.po.RolePO;
@@ -10,6 +11,7 @@ import com.hotel.pojo.vo.RoleVO;
 import com.hotel.service.RoleService;
 import com.hotel.util.CheckUtils;
 import com.hotel.util.MyBeanUtils;
+import com.hotel.util.RespUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +29,7 @@ import java.util.List;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;
-    private final UsersMapper usersMapper;
+    private final UserRoleMapper userRoleMapper;
 
     private Role role = null;
 
@@ -91,7 +93,10 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public RespVO getRoleUserCount(Integer roleId) {
-        //int count = usersMapper
-        return null;
+        int count = userRoleMapper.getRoleUserCount(roleId);
+        if (count > 0) {
+            return RespUtils.hasLinked();
+        }
+        return RespUtils.success(count);
     }
 }
