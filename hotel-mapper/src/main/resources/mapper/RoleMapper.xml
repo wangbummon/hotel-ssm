@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotel.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Role">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="role_code" jdbcType="VARCHAR" property="roleCode"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="role_desc" jdbcType="VARCHAR" property="roleDesc"/>
+    </resultMap>
+    <!--根据id删除角色-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE
+        FROM sys_role
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+    <!--新增角色-->
+    <insert id="insert" parameterType="com.hotel.pojo.entity.Role">
+        INSERT INTO sys_role (id, role_code, role_name, role_desc)
+        VALUES (#{id,jdbcType=INTEGER}, #{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR},
+                #{roleDesc,jdbcType=VARCHAR})
+    </insert>
+    <!--根据id修改角色-->
+    <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Role">
+        UPDATE sys_role
+        SET role_code = #{roleCode,jdbcType=VARCHAR},
+            role_name = #{roleName,jdbcType=VARCHAR},
+            role_desc = #{roleDesc,jdbcType=VARCHAR}
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+    <!--根据id查询角色信息-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT id,
+               role_code,
+               role_name,
+               role_desc
+        FROM sys_role
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+    <!--查询所有角色信息-->
+    <select id="selectRole" resultMap="BaseResultMap">
+        SELECT id,
+        role_code,
+        role_name,
+        role_desc
+        FROM sys_role
+        <where>
+            <if test="roleName != null and roleName != ''">
+                AND role_name LIKE CONCAT('%',#{roleName},'%')
+            </if>
+        </where>
+    </select>
+    <!--根据用户id查询角色列表-->
+    <select id="selectRoleByUserId" resultMap="BaseResultMap">
+        SELECT r.id,
+               r.role_code,
+               r.role_name,
+               r.role_desc
+        FROM sys_role r,
+             sys_user_role ur,
+             sys_users u
+        WHERE r.id = ur.rid
+          AND ur.uid = u.id
+          AND u.id = #{userId}
+    </select>
+</mapper>

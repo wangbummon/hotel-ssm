@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotel.mapper.UsersMapper">
+    <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Users">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+        <result column="sex" jdbcType="INTEGER" property="sex"/>
+        <result column="dept_id" jdbcType="INTEGER" property="deptId"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="user_type" jdbcType="INTEGER" property="userType"/>
+        <result column="hire_date" jdbcType="TIMESTAMP" property="hireDate"/>
+        <result column="created_user" jdbcType="INTEGER" property="createdUser"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="modify_user" jdbcType="INTEGER" property="modifyUser"/>
+        <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+
+    <!--用户角色关系-->
+    <resultMap id="UserRoleResultMap" type="com.hotel.pojo.entity.Users" extends="BaseResultMap">
+        <collection property="roleList" column="id" select="com.hotel.mapper.RoleMapper.selectRoleByUserId"/>
+    </resultMap>
+
+    <!--根据id删除用户-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE
+        FROM sys_users
+        <where>
+            id = #{id,jdbcType=INTEGER}
+        </where>
+    </delete>
+    <!--新增用户-->
+    <insert id="insert" parameterType="com.hotel.pojo.entity.Users">
+        INSERT INTO sys_users (id, username, password,
+                               real_name, sex, dept_id,
+                               status, email, phone,
+                               user_type, hire_date, created_user,
+                               create_date, modify_user, modify_date,
+                               remark)
+        VALUES (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                #{realName,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{deptId,jdbcType=INTEGER},
+                #{status,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+                #{userType,jdbcType=INTEGER}, #{hireDate,jdbcType=TIMESTAMP}, #{createdUser,jdbcType=INTEGER},
+                #{createDate,jdbcType=TIMESTAMP}, #{modifyUser,jdbcType=INTEGER}, #{modifyDate,jdbcType=TIMESTAMP},
+                #{remark,jdbcType=VARCHAR})
+    </insert>
+    <!--根据id修改用户信息-->
+    <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Users">
+        UPDATE sys_users
+        SET username = #{username,jdbcType=VARCHAR},
+        password = #{password,jdbcType=VARCHAR},
+        real_name = #{realName,jdbcType=VARCHAR},
+        sex = #{sex,jdbcType=INTEGER},
+        dept_id = #{deptId,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+        email = #{email,jdbcType=VARCHAR},
+        phone = #{phone,jdbcType=VARCHAR},
+        user_type = #{userType,jdbcType=INTEGER},
+        hire_date = #{hireDate,jdbcType=TIMESTAMP},
+        created_user = #{createdUser,jdbcType=INTEGER},
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+        modify_user = #{modifyUser,jdbcType=INTEGER},
+        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+        remark = #{remark,jdbcType=VARCHAR}
+        <where>
+            id = #{id,jdbcType=INTEGER}
+        </where>
+    </update>
+    <!--根据id查询用户信息-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT id,
+        username,
+        password,
+        real_name,
+        sex,
+        dept_id,
+        status,
+        email,
+        phone,
+        user_type,
+        hire_date,
+        created_user,
+        create_date,
+        modify_user,
+        modify_date,
+        remark
+        FROM sys_users
+        <where>
+            id = #{id,jdbcType=INTEGER}
+        </where>
+    </select>
+    <!--查询所有用户信息-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT id,
+               username,
+               password,
+               real_name,
+               sex,
+               dept_id,
+               status,
+               email,
+               phone,
+               user_type,
+               hire_date,
+               created_user,
+               create_date,
+               modify_user,
+               modify_date,
+               remark
+        FROM sys_users
+    </select>
+    <!--根据用户名查询用户信息-->
+    <select id="selectUsersByUsername" resultMap="UserRoleResultMap">
+        SELECT id,
+        username,
+        password,
+        real_name,
+        sex,
+        dept_id,
+        status,
+        email,
+        phone,
+        user_type,
+        hire_date,
+        created_user,
+        create_date,
+        modify_user,
+        modify_date,
+        remark
+        FROM sys_users
+        <where>
+            username = #{username}
+        </where>
+    </select>
+</mapper>

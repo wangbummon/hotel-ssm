@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hotel.mapper.OrdersMapper" >
+  <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Orders" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="orders_num" property="ordersNum" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="BIGINT" />
+    <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER" />
+    <result column="room_id" property="roomId" jdbcType="BIGINT" />
+    <result column="reservation_name" property="reservationName" jdbcType="VARCHAR" />
+    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="reserve_date" property="reserveDate" jdbcType="TIMESTAMP" />
+    <result column="arrive_date" property="arriveDate" jdbcType="DATE" />
+    <result column="leave_date" property="leaveDate" jdbcType="DATE" />
+    <result column="reserve_price" property="reservePrice" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_orders
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.hotel.pojo.entity.Orders" >
+    insert into t_orders (id, orders_num, account_id, 
+      room_type_id, room_id, reservation_name, 
+      id_card, phone, status, 
+      reserve_date, arrive_date, leave_date, 
+      reserve_price, remark)
+    values (#{id,jdbcType=BIGINT}, #{ordersNum,jdbcType=VARCHAR}, #{accountId,jdbcType=BIGINT}, 
+      #{roomTypeId,jdbcType=INTEGER}, #{roomId,jdbcType=BIGINT}, #{reservationName,jdbcType=VARCHAR}, 
+      #{idCard,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{reserveDate,jdbcType=TIMESTAMP}, #{arriveDate,jdbcType=DATE}, #{leaveDate,jdbcType=DATE}, 
+      #{reservePrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Orders" >
+    update t_orders
+    set orders_num = #{ordersNum,jdbcType=VARCHAR},
+      account_id = #{accountId,jdbcType=BIGINT},
+      room_type_id = #{roomTypeId,jdbcType=INTEGER},
+      room_id = #{roomId,jdbcType=BIGINT},
+      reservation_name = #{reservationName,jdbcType=VARCHAR},
+      id_card = #{idCard,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      reserve_date = #{reserveDate,jdbcType=TIMESTAMP},
+      arrive_date = #{arriveDate,jdbcType=DATE},
+      leave_date = #{leaveDate,jdbcType=DATE},
+      reserve_price = #{reservePrice,jdbcType=DECIMAL},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, orders_num, account_id, room_type_id, room_id, reservation_name, id_card, 
+    phone, status, reserve_date, arrive_date, leave_date, reserve_price, remark
+    from t_orders
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, orders_num, account_id, room_type_id, room_id, reservation_name, id_card, 
+    phone, status, reserve_date, arrive_date, leave_date, reserve_price, remark
+    from t_orders
+  </select>
+</mapper>

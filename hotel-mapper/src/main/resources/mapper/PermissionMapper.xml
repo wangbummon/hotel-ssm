@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hotel.mapper.PermissionMapper">
+    <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Permission">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="parent_id" property="parentId" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="permission_code" property="permissionCode" jdbcType="VARCHAR"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="href" property="href" jdbcType="VARCHAR"/>
+        <result column="spread" property="spread" jdbcType="INTEGER"/>
+        <result column="target" property="target" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--查询所有菜单-->
+    <select id="selectAllPermission" resultMap="BaseResultMap">
+        SELECT id, parent_id, type, title, permission_code, icon, href, spread, target
+        FROM sys_permission
+        <where>
+            <if test="type != null and type != ''">
+                type = #{type}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

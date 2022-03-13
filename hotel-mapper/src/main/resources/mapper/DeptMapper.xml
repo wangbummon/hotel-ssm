@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotel.mapper.DeptMapper">
+    <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Dept">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+
+    <!--根据id删除部门-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE
+        FROM sys_dept
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <!--新增部门-->
+    <insert id="insert" parameterType="com.hotel.pojo.entity.Dept">
+        INSERT INTO sys_dept (id, dept_name, address,
+                              create_date, remark)
+        VALUES (#{id,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+                #{createDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+    </insert>
+
+    <!--根据id修改部门信息-->
+    <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Dept">
+        UPDATE sys_dept
+        SET dept_name   = #{deptName,jdbcType=VARCHAR},
+            address     = #{address,jdbcType=VARCHAR},
+            create_date = #{createDate,jdbcType=TIMESTAMP},
+            remark      = #{remark,jdbcType=VARCHAR}
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--根据id查询部门详情-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT id, dept_name, address, create_date, remark
+        FROM sys_dept
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--查询部门信息-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT id, dept_name, address, create_date, remark
+        FROM sys_dept
+        <where>
+            <if test="deptName!=null and deptName != ''">
+                AND dept_name like CONCAT('%',#{deptName},'%')
+            </if>
+            <if test="address != null and address != ''">
+                AND address like CONCAT('%',#{address},'%')
+            </if>
+        </where>
+        ORDER BY id
+    </select>
+</mapper>

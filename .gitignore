@@ -1,0 +1,7 @@
+# Project exclude paths
+/hotel-generator/target/
+/hotel-manager/target/
+/hotel-mapper/target/
+/hotel-pojo/target/
+/hotel-service/target/
+/hotel-util/target/

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hotel.mapper.CheckinMapper">
+    <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Checkin">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <id column="pay_price" property="payPrice" jdbcType="DECIMAL"/>
+        <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER"/>
+        <result column="room_id" property="roomId" jdbcType="BIGINT"/>
+        <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
+        <result column="id_card" property="idCard" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="arrive_date" property="arriveDate" jdbcType="DATE"/>
+        <result column="leave_date" property="leaveDate" jdbcType="DATE"/>
+        <result column="orders_id" property="ordersId" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="created_user" property="createdUser" jdbcType="INTEGER"/>
+        <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP"/>
+        <result column="modify_user" property="modifyUser" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--根据id删除入住信息-->
+    <delete id="deleteByPrimaryKey" parameterType="map">
+        DELETE
+        FROM t_checkin
+        WHERE id = #{id,jdbcType=BIGINT}
+          AND pay_price = #{payPrice,jdbcType=DECIMAL}
+    </delete>
+    <!--新增入住信息-->
+    <insert id="insert" parameterType="com.hotel.pojo.entity.Checkin">
+        INSERT INTO t_checkin (id, pay_price, room_type_id,
+                               room_id, customer_name, id_card,
+                               phone, arrive_date, leave_date,
+                               orders_id, status, create_date,
+                               created_user, modify_date, modify_user,
+                               remark)
+        VALUES (#{id,jdbcType=BIGINT}, #{payPrice,jdbcType=DECIMAL}, #{roomTypeId,jdbcType=INTEGER},
+                #{roomId,jdbcType=BIGINT}, #{customerName,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR},
+                #{phone,jdbcType=VARCHAR}, #{arriveDate,jdbcType=DATE}, #{leaveDate,jdbcType=DATE},
+                #{ordersId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
+                #{createdUser,jdbcType=INTEGER}, #{modifyDate,jdbcType=TIMESTAMP}, #{modifyUser,jdbcType=INTEGER},
+                #{remark,jdbcType=VARCHAR})
+    </insert>
+    <!--根据id修改入住信息-->
+    <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Checkin">
+        UPDATE t_checkin
+        SET room_type_id  = #{roomTypeId,jdbcType=INTEGER},
+            room_id       = #{roomId,jdbcType=BIGINT},
+            customer_name = #{customerName,jdbcType=VARCHAR},
+            id_card       = #{idCard,jdbcType=VARCHAR},
+            phone         = #{phone,jdbcType=VARCHAR},
+            arrive_date   = #{arriveDate,jdbcType=DATE},
+            leave_date    = #{leaveDate,jdbcType=DATE},
+            orders_id     = #{ordersId,jdbcType=BIGINT},
+            status        = #{status,jdbcType=INTEGER},
+            create_date   = #{createDate,jdbcType=TIMESTAMP},
+            created_user  = #{createdUser,jdbcType=INTEGER},
+            modify_date   = #{modifyDate,jdbcType=TIMESTAMP},
+            modify_user   = #{modifyUser,jdbcType=INTEGER},
+            remark        = #{remark,jdbcType=VARCHAR}
+        WHERE id = #{id,jdbcType=BIGINT}
+          AND pay_price = #{payPrice,jdbcType=DECIMAL}
+    </update>
+    <!--根据id查询入住信息-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map">
+        SELECT id,
+               pay_price,
+               room_type_id,
+               room_id,
+               customer_name,
+               id_card,
+               phone,
+               arrive_date,
+               leave_date,
+               orders_id,
+               status,
+               create_date,
+               created_user,
+               modify_date,
+               modify_user,
+               remark
+        FROM t_checkin
+        WHERE id = #{id,jdbcType=BIGINT}
+          AND pay_price = #{payPrice,jdbcType=DECIMAL}
+    </select>
+    <!--查询所有入住信息-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT id,
+               pay_price,
+               room_type_id,
+               room_id,
+               customer_name,
+               id_card,
+               phone,
+               arrive_date,
+               leave_date,
+               orders_id,
+               status,
+               create_date,
+               created_user,
+               modify_date,
+               modify_user,
+               remark
+        FROM t_checkin
+    </select>
+</mapper>

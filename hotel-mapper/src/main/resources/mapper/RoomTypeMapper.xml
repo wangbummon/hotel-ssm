@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hotel.mapper.RoomTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.RoomType" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="type_name" property="typeName" jdbcType="VARCHAR" />
+    <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="live_num" property="liveNum" jdbcType="INTEGER" />
+    <result column="bed_num" property="bedNum" jdbcType="INTEGER" />
+    <result column="room_num" property="roomNum" jdbcType="INTEGER" />
+    <result column="reserved_num" property="reservedNum" jdbcType="INTEGER" />
+    <result column="avilable_num" property="avilableNum" jdbcType="INTEGER" />
+    <result column="lived_num" property="livedNum" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_room_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.hotel.pojo.entity.RoomType" >
+    insert into t_room_type (id, type_name, photo, 
+      price, live_num, bed_num, 
+      room_num, reserved_num, avilable_num, 
+      lived_num, status, remark
+      )
+    values (#{id,jdbcType=INTEGER}, #{typeName,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{liveNum,jdbcType=INTEGER}, #{bedNum,jdbcType=INTEGER}, 
+      #{roomNum,jdbcType=INTEGER}, #{reservedNum,jdbcType=INTEGER}, #{avilableNum,jdbcType=INTEGER}, 
+      #{livedNum,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.RoomType" >
+    update t_room_type
+    set type_name = #{typeName,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      live_num = #{liveNum,jdbcType=INTEGER},
+      bed_num = #{bedNum,jdbcType=INTEGER},
+      room_num = #{roomNum,jdbcType=INTEGER},
+      reserved_num = #{reservedNum,jdbcType=INTEGER},
+      avilable_num = #{avilableNum,jdbcType=INTEGER},
+      lived_num = #{livedNum,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, type_name, photo, price, live_num, bed_num, room_num, reserved_num, avilable_num, 
+    lived_num, status, remark
+    from t_room_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, type_name, photo, price, live_num, bed_num, room_num, reserved_num, avilable_num, 
+    lived_num, status, remark
+    from t_room_type
+  </select>
+</mapper>
