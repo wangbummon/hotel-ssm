@@ -1,4 +1,4 @@
-package com.hotel.pojo.response;
+package com.hotel.pojo.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RespVO {
+public class ResponseVO {
 
     /**
      * layui状态码 0-成功 其他均为失败

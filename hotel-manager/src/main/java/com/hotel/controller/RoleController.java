@@ -1,7 +1,7 @@
 package com.hotel.controller;
 
 import com.hotel.pojo.po.RolePO;
-import com.hotel.pojo.response.RespVO;
+import com.hotel.pojo.vo.ResponseVO;
 import com.hotel.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -24,32 +24,50 @@ public class RoleController {
 
     @ApiOperation("查询所有角色")
     @GetMapping("/roles")
-    public RespVO getRoles(RolePO params){
+    public ResponseVO getRoles(RolePO params) {
         return roleService.getRole(params);
     }
 
     @ApiOperation("新增角色")
     @PostMapping("/roles")
-    public RespVO addRole(@RequestBody RolePO params){
+    public ResponseVO addRole(@RequestBody RolePO params) {
         return roleService.addRole(params);
     }
 
     @ApiOperation("修改角色")
-    @PutMapping("/roles")
-    public RespVO modifyRole(@RequestBody RolePO params){
+    @PutMapping("/roles/{id}")
+    public ResponseVO modifyRole(@RequestBody RolePO params) {
         return roleService.modifyRole(params);
     }
 
     @ApiOperation("删除角色")
-    @ApiImplicitParam(name = "id",value = "角色id",required = true)
-    @DeleteMapping("/roles/{id}")
-    public RespVO removeRole(@PathVariable Integer id){
+    @ApiImplicitParam(name = "id", value = "角色id", required = true)
+    @DeleteMapping("/role/{id}")
+    public ResponseVO removeRole(@PathVariable Integer id) {
         return roleService.removeRole(id);
+    }
+
+    @ApiOperation("批量删除角色")
+    @DeleteMapping("/roles/{ids}")
+    public ResponseVO removevRoles(@PathVariable String ids){
+        return roleService.removeRoles(ids);
+    }
+
+    @ApiOperation("查询所选多个角色下是否有用户在使用")
+    @GetMapping("/role-user")
+    public ResponseVO getRolesUserCount(@RequestParam String ids) {
+        return roleService.getRolesUserCount(ids);
     }
 
     @ApiOperation("查询角色是否有用户在使用")
     @GetMapping("/role-user/{roleId}")
-    public RespVO getRoleUserCount(@PathVariable Integer roleId){
+    public ResponseVO getRoleUserCount(@PathVariable Integer roleId) {
         return roleService.getRoleUserCount(roleId);
+    }
+
+    @ApiOperation("角色管理-初始化角色数据")
+    @GetMapping("/roles/init/{id}")
+    public ResponseVO initRoleData(@PathVariable Integer id) {
+        return roleService.initRoleData(id);
     }
 }

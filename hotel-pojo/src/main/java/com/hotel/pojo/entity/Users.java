@@ -1,6 +1,8 @@
 package com.hotel.pojo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 import java.util.List;
@@ -68,6 +70,8 @@ public class Users {
     /**
      * 入职日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date hireDate;
 
     /**
@@ -78,7 +82,9 @@ public class Users {
     /**
      * 创建时间
      */
-    private Date createDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createdDate;
 
     /**
      * 修改人
@@ -88,6 +94,8 @@ public class Users {
     /**
      * 修改时间
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date modifyDate;
 
     /**

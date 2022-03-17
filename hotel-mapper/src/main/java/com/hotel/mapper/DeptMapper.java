@@ -40,4 +40,11 @@ public interface DeptMapper {
      * @return
      */
     boolean updateByPrimaryKey(Dept dept);
+
+    /**
+     * 批量删除部门
+     * @param deptIds 部门id列表
+     * @return
+     */
+    boolean removeDepts(@Param("deptIds") List deptIds);
 }

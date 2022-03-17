@@ -12,7 +12,7 @@
 
 	<!-- 配置别名 -->
 	<typeAliases>
-		<package name="com.manong.entity" />
+		<package name="com.hotel.pojo.entity" />
 	</typeAliases>
 
 	<!-- 引入 pageHelper插件 -->

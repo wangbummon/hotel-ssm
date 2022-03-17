@@ -14,10 +14,10 @@ public class UserRole {
     /**
      * 用户id
      */
-    private Long userId;
+    private Integer userId;
 
     /**
      * 角色id
      */
-    private Long roleId;
+    private Integer roleId;
 }

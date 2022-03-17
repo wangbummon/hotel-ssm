@@ -7,7 +7,7 @@
     <%--获取CSRF头，默认为X-CSRF-TOKEN--%>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <meta charset="utf-8">
-    <title>layui</title>
+    <title>角色管理</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -57,8 +57,12 @@
         <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
         <%--行工具栏--%>
         <script type="text/html" id="currentTableBar">
-            <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
-            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="edit"><i
+                    class="layui-icon layui-icon-edit"></i>编辑</a>
+            <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete"><i
+                    class="layui-icon layui-icon-close"></i>删除</a>
+            <a class="layui-btn layui-btn-xs data-count-edit" lay-event="grantMenu"><i
+                    class="layui-icon layui-icon-edit"></i>分配菜单</a>
         </script>
 
         <%-- 添加窗口 --%>
@@ -84,7 +88,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="width: 120px">角色描述</label>
                     <div class="layui-input-block">
-                        <textarea class="layui-textarea" style="width: 500px" name="roleDesc" id="addContent"></textarea>
+                        <textarea class="layui-textarea" style="width: 500px" name="roleDesc"
+                                  id="addContent"></textarea>
                     </div>
                 </div>
                 <div class="layui-form-item layui-row layui-col-xs12">
@@ -104,26 +109,27 @@
         <div style="display: none;padding: 5px" id="updateWindow">
             <form class="layui-form" style="width:90%;" id="updateFrm" lay-filter="updateFrm" method="">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">角色代码</label>
+                    <label class="layui-form-label" style="width: 120px">角色代码ROLE_</label>
                     <div class="layui-input-block">
                         <%--隐藏域--%>
                         <input type="hidden" name="id">
-                        <input type="text" name="deptCode" lay-verify="required" autocomplete="off"
+                        <input type="text" name="roleCode" style="width: 500px" lay-verify="required" autocomplete="off"
                                placeholder="请输入角色代码" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">角色名称</label>
+                    <label class="layui-form-label" style="width: 120px">角色名称</label>
                     <div class="layui-input-block">
-                        <input type="text" name="roleName" lay-verify="required" autocomplete="off"
+                        <input type="text" name="roleName" style="width: 500px" lay-verify="required" autocomplete="off"
                                placeholder="请输入角色名称"
                                class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">角色描述</label>
+                    <label class="layui-form-label" style="width: 120px">角色描述</label>
                     <div class="layui-input-block">
-                        <textarea class="layui-textarea" name="roleDesc" id="updateContent"></textarea>
+                        <textarea class="layui-textarea" style="width: 500px" name="roleDesc"
+                                  id="editContent"></textarea>
                     </div>
                 </div>
                 <div class="layui-form-item layui-row layui-col-xs12">
@@ -172,7 +178,7 @@
             },
             cols: [[
                 {type: "checkbox", width: 50},
-                {field: 'id', width: 150, title: '角色编号', sort: true, align: "center"},
+                {field: 'id', width: 120, title: '角色编号', sort: true, align: "center"},
                 {field: 'roleCode', width: 350, title: '角色代码', align: "center"},
                 {field: 'roleName', width: 350, title: '角色名称', align: "center"},
                 {field: 'roleDesc', width: 500, title: '角色描述', align: "center"},
@@ -209,8 +215,62 @@
                 case 'add':
                     openAddWindow();
                     break;
+                case 'delete':
+                    deleteByIds(obj)
+                    break;
             }
         });
+
+
+        /**
+         * 批量删除角色
+         * @param obj
+         */
+        function deleteByIds(obj) {
+            let checkStatus = table.checkStatus('currentTableId');
+            let idArr = [],
+                ids = "";
+            if (checkStatus.data.length > 0) {
+                for (let i = 0; i < checkStatus.data.length; i++) {
+                    idArr.push(checkStatus.data[i].id);
+                    ids = idArr.join(",");
+                }
+                console.log(ids)
+                $.ajax({
+                    url: "/admin/role-user",
+                    type: "GET",
+                    data: {"ids": ids},
+                    success: function (result) {
+                        if (result.code === 1) {
+                            layer.msg(result.msg);
+                        } else {
+                            layer.confirm("确定要删除所选角色吗？", {
+                                icon: 3,
+                                title: "提示"
+                            }, function (index) {
+                                $.ajax({
+                                    url: "/admin/roles/" + ids,
+                                    type: "DELETE",
+                                    data: {"ids": ids},
+                                    success: function (result) {
+                                        if (result.code === 0) {
+                                            layer.msg(result.msg)
+                                            //数据刷新
+                                            tableIns.reload();
+                                            layer.close(index);
+                                        } else {
+                                            layer.msg(result.msg)
+                                        }
+                                    }
+                                })
+                            });
+                        }
+                    }
+                });
+            } else {
+                layer.msg("请选择要删除的角色");
+            }
+        }
 
         //定义变量 保存提交地址和窗口索引
         var url, mainIndex;
@@ -226,7 +286,6 @@
                 content: $("#addWindow"),
                 success: function () {
                     $("#addFrm")[0].reset();
-                    url = "/admin/roles"
                 }
             });
         }
@@ -236,25 +295,122 @@
          */
         form.on('submit(doAdd)', function (data) {
             $.ajax({
-                url: url,
+                url: "/admin/roles",
                 type: "POST",
                 data: JSON.stringify(data.field),
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8',
                 success: function (result) {
                     if (result.code === 0) {
-                        layer.msg(result.msg, {icon: 1})
+                        layer.msg(result.msg)
                         //数据刷新
                         tableIns.reload();
                         //关闭当前窗口
                         layer.close(mainIndex);
                     } else {
-                        layer.msg(result.msg, {icon: 2})
+                        layer.msg(result.msg)
                     }
                 }
             })
             return false;
         });
+
+        /**
+         * 表格行监听事件
+         */
+        table.on('tool(currentTableFilter)', function (obj) {
+            switch (obj.event) {
+                case 'edit':
+                    $("#updateFrm")[0].reset();
+                    openUpdateWindow(obj.data);
+                    break;
+                case 'delete':
+                    deleteById(obj.data);
+                    break;
+            }
+        });
+
+        /**
+         * 打开修改窗口
+         */
+        function openUpdateWindow(data) {
+            mainIndex = layer.open({
+                type: 1,
+                title: "修改部门信息",
+                area: ["800px", "400px"],
+                content: $("#updateWindow"),
+                success: function () {
+                    //表单数据回显
+                    form.val("updateFrm", data);
+                }
+            });
+        }
+
+        /**
+         * 监听修改提交事件
+         */
+        form.on('submit(doEdit)', function (data) {
+            $.ajax({
+                url: "/admin/roles/" + data.id,
+                type: "PUT",
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                success: function (result) {
+                    if (result.code === 0) {
+                        layer.msg(result.msg)
+                        //数据刷新
+                        tableIns.reload();
+                        //关闭当前窗口
+                        layer.close(mainIndex);
+                    } else {
+                        layer.msg(result.msg)
+                    }
+                }
+            })
+            return false;
+        });
+
+        /**
+         * 删除角色
+         * @param data
+         */
+        function deleteById(data) {
+            $.ajax({
+                url: "/admin/role-user/" + data.id,
+                type: "GET",
+                data: {"roleId": data.id},
+                success: function (result) {
+                    if (result.code === 1) {
+                        layer.msg(result.msg);
+                    } else {
+                        //提示用户是否确定删除
+                        layer.confirm("确定要删除角色[<font color='red'>" + data.roleName + "</font>]吗？", {
+                            icon: 3,
+                            title: "警告"
+                        }, function (index) {
+                            //发送删除部门的请求
+                            $.ajax({
+                                url: "/admin/role/" + data.id,
+                                type: "DELETE",
+                                data: {"id": data.id},
+                                success: function (result) {
+                                    if (result.code === 0) {
+                                        layer.msg(result.msg)
+                                        //数据刷新
+                                        tableIns.reload();
+                                    } else {
+                                        layer.msg(result.msg)
+                                    }
+                                }
+                            })
+                            layer.close(index);
+                        })
+                    }
+                }
+            });
+        }
+
 
     });
 </script>

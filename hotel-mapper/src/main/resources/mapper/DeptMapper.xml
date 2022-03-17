@@ -16,22 +16,42 @@
         WHERE id = #{id,jdbcType=INTEGER}
     </delete>
 
+    <!--批量删除部门-->
+    <delete id="removeDepts">
+        delete from sys_dept where id in
+        <foreach collection="deptIds" open="(" separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
     <!--新增部门-->
     <insert id="insert" parameterType="com.hotel.pojo.entity.Dept">
-        INSERT INTO sys_dept (id, dept_name, address,
+        INSERT INTO sys_dept (dept_name, address,
                               create_date, remark)
-        VALUES (#{id,jdbcType=INTEGER}, #{deptName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+        VALUES (#{deptName,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
                 #{createDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
     </insert>
 
     <!--根据id修改部门信息-->
     <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Dept">
         UPDATE sys_dept
-        SET dept_name   = #{deptName,jdbcType=VARCHAR},
-            address     = #{address,jdbcType=VARCHAR},
-            create_date = #{createDate,jdbcType=TIMESTAMP},
-            remark      = #{remark,jdbcType=VARCHAR}
-        WHERE id = #{id,jdbcType=INTEGER}
+        <set>
+            <if test="deptName!=null">
+                dept_name = #{deptName,jdbcType=VARCHAR},
+            </if>
+            <if test="address!=null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark!=null">
+                remark = #{remark,jdbcType=VARCHAR}
+            </if>
+        </set>
+        <where>
+            id = #{id,jdbcType=INTEGER}
+        </where>
     </update>
 
     <!--根据id查询部门详情-->

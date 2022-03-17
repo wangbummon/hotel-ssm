@@ -13,19 +13,36 @@
         FROM sys_role
         WHERE id = #{id,jdbcType=INTEGER}
     </delete>
+    <!--批量删除角色-->
+    <delete id="removeRoles">
+        DELETE FROM sys_role WHERE id in
+        <foreach collection="roleIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
     <!--新增角色-->
     <insert id="insert" parameterType="com.hotel.pojo.entity.Role">
-        INSERT INTO sys_role (id, role_code, role_name, role_desc)
-        VALUES (#{id,jdbcType=INTEGER}, #{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR},
+        INSERT INTO sys_role (role_code, role_name, role_desc)
+        VALUES (#{roleCode,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR},
                 #{roleDesc,jdbcType=VARCHAR})
     </insert>
     <!--根据id修改角色-->
     <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Role">
         UPDATE sys_role
-        SET role_code = #{roleCode,jdbcType=VARCHAR},
-            role_name = #{roleName,jdbcType=VARCHAR},
-            role_desc = #{roleDesc,jdbcType=VARCHAR}
-        WHERE id = #{id,jdbcType=INTEGER}
+        <set>
+            <if test="roleCode!=null">
+                role_code = #{roleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="roleName!=null">
+                role_name = #{roleName,jdbcType=VARCHAR},
+            </if>
+            <if test="roleDesc!=null">
+                role_desc = #{roleDesc,jdbcType=VARCHAR},
+            </if>
+        </set>
+        <where>
+            id = #{id,jdbcType=INTEGER}
+        </where>
     </update>
     <!--根据id查询角色信息-->
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -61,8 +78,8 @@
         FROM sys_role r,
              sys_user_role ur,
              sys_users u
-        WHERE r.id = ur.rid
-          AND ur.uid = u.id
+        WHERE r.id = ur.role_id
+          AND ur.user_id = u.id
           AND u.id = #{userId}
     </select>
 </mapper>

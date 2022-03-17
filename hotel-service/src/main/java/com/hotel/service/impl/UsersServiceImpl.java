@@ -1,9 +1,21 @@
 package com.hotel.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.hotel.mapper.UserRoleMapper;
 import com.hotel.mapper.UsersMapper;
 import com.hotel.pojo.entity.Role;
+import com.hotel.pojo.entity.UserRole;
 import com.hotel.pojo.entity.Users;
+import com.hotel.pojo.po.UserRolePO;
+import com.hotel.pojo.po.UsersPO;
+import com.hotel.pojo.vo.ResponseVO;
+import com.hotel.pojo.vo.UsersVO;
 import com.hotel.service.UsersService;
+import com.hotel.util.CheckUtils;
+import com.hotel.pojo.enums.DataEnums;
+import com.hotel.util.MyBeanUtils;
+import com.hotel.util.PasswordUtils;
+import com.hotel.util.ResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -12,8 +24,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author az
@@ -26,8 +37,17 @@ import java.util.List;
 public class UsersServiceImpl implements UsersService {
 
     private final UsersMapper usersMapper;
+    private final UserRoleMapper userRoleMapper;
 
+    private Users users = new Users();
 
+    /**
+     * spring security按照用户名加载用户 此处不会传入用户的密码
+     *
+     * @param username 用户名
+     * @return
+     * @throws UsernameNotFoundException 用户名未找到
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         //创建角色列表集合
@@ -48,5 +68,131 @@ public class UsersServiceImpl implements UsersService {
                 true,
                 authorities);
         return user;
+    }
+
+    /**
+     * 查询用户列表
+     *
+     * @param params 用户PO
+     * @return
+     */
+    @Override
+    public ResponseVO getUser(UsersPO params) {
+        if (Objects.equals(params.getStartDate(), "")) {
+            params.setStartDate(null);
+        }
+        if (Objects.equals(params.getEndDate(), "")) {
+            params.setEndDate(null);
+        }
+        PageHelper.startPage(params.getPageNum(), params.getPageSize());
+        List<Users> usersList = usersMapper.getUser(params);
+        return CheckUtils.checkEmpty(usersList, UsersVO.class);
+    }
+
+    /**
+     * 新增用户
+     *
+     * @param params 用户PO
+     * @return
+     */
+    @Override
+    public ResponseVO addUser(UsersPO params) {
+        users = new Users();
+        MyBeanUtils.copyProperties(params, users);
+        users.setCreatedDate(new Date());
+        //设置密文密码保存至数据库 这里指定所有用户初始密码均为123456
+        users.setPassword(PasswordUtils.encode(DataEnums.DEFAULT_PASSWORD.getData()));
+        return CheckUtils.checkSuccess(usersMapper.insert(users));
+    }
+
+    /**
+     * 根据id修改用户信息
+     *
+     * @param params 用户PO
+     * @return
+     */
+
+    @Override
+    public ResponseVO modifyUsers(UsersPO params) {
+        users = new Users();
+        MyBeanUtils.copyProperties(params, users);
+        users.setModifyDate(new Date());
+        return CheckUtils.checkSuccess(usersMapper.updateByPrimaryKey(users));
+    }
+
+    /**
+     * 根据用户id删除用户
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ResponseVO removeUser(Integer id) {
+        //根据用户id删除用户角色中间表中的数据
+        userRoleMapper.deleteUserRoleByUid(id);
+        return CheckUtils.checkSuccess(usersMapper.deleteByPrimaryKey(id));
+    }
+
+    /**
+     * 根据id重置用户密码
+     *
+     * @param id 用户id
+     * @return
+     */
+    @Override
+    public ResponseVO resetPwd(Integer id) {
+        //将密码重置为加密后的默认密码 123456
+        users = Users.builder()
+                .id(id)
+                .password(PasswordUtils.encode(DataEnums.DEFAULT_PASSWORD.getData()))
+                .modifyDate(new Date())
+                .build();
+
+        return CheckUtils.checkSuccess(usersMapper.updateByPrimaryKey(users));
+    }
+
+    /**
+     * 根据用户id分配角色
+     *
+     * @param userRolePO 用户角色关系PO
+     * @return
+     */
+    @Override
+    public ResponseVO saveUserRoles(UserRolePO userRolePO) {
+        //创建用户角色关系前先将原有数据清空
+        userRoleMapper.deleteUserRoleByUid(userRolePO.getUserId());
+        UserRole userRole = null;
+        try {
+            //根据逗号分割字符串拿到角色id
+            String[] idList = userRolePO.getRoleIds().split(",");
+            for (String idStr : idList) {
+                Integer roleId = Integer.valueOf(idStr);
+                userRole = UserRole.builder()
+                        .userId(userRolePO.getUserId())
+                        .roleId(roleId)
+                        .build();
+                //循环插入
+                userRoleMapper.insert(userRole);
+            }
+            return ResponseUtils.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseUtils.failed();
+    }
+
+    /**
+     * 批量删除用户
+     *
+     * @param ids 逗号拼接的用户id
+     * @return
+     */
+    @Override
+    public ResponseVO removeUsers(String ids) {
+        List userIds = Arrays.asList(ids.split(","));
+        //删除用户角色关系
+        userRoleMapper.deleteUsersRoleByUserIds(userIds);
+        boolean remove = usersMapper.removeUsers(userIds);
+        return CheckUtils.checkSuccess(remove);
     }
 }

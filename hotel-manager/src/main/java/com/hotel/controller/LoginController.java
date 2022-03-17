@@ -1,6 +1,6 @@
 package com.hotel.controller;
 
-import com.hotel.pojo.response.RespVO;
+import com.hotel.pojo.vo.ResponseVO;
 import com.hotel.service.UsersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,7 +34,7 @@ public class LoginController {
     })
     @GetMapping("/userList")
     public @ResponseBody
-    RespVO userList() {
+    ResponseVO userList() {
         return null;
     }
 

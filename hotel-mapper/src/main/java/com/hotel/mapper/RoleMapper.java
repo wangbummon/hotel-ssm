@@ -2,8 +2,10 @@ package com.hotel.mapper;
 
 import com.hotel.pojo.entity.Role;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RoleMapper {
 
@@ -46,4 +48,26 @@ public interface RoleMapper {
      * @return
      */
     List<Role> selectRoleByUserId(@Param("userId") Integer userId);
+
+    /**
+     * 获取所有角色的Map集合的List
+     * @return
+     */
+    @Select("SELECT id,role_code,role_name,role_desc FROM sys_role")
+    List<Map<String, Object>> getRoleListByMap();
+
+    /**
+     * 根据用户id查询角色id列表
+     * @param id 用户id
+     * @return
+     */
+    @Select("SELECT role_id FROM sys_user_role WHERE user_id = #{uid}")
+    List<Integer> getRoleIdByUserId(@Param("uid") Integer id);
+
+    /**
+     * 批量删除角色
+     * @param roleIds
+     * @return
+     */
+    boolean removeRoles(@Param("roleIds") List roleIds);
 }

@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>酒店后台管理-登陆</title>
+    <title>后台管理系统登录</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Access-Control-Allow-Origin" content="*">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -300,7 +300,7 @@
 <div class="main-body">
     <div class="login-main">
         <div class="login-top">
-            <span>酒店管理系统后台登录</span>
+            <span>后台管理系统登录</span>
             <span class="bg1"></span>
             <span class="bg2"></span>
         </div>

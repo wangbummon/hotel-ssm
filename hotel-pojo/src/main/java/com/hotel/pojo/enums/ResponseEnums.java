@@ -1,13 +1,11 @@
-package com.hotel.pojo.response;
-
-import lombok.Data;
+package com.hotel.pojo.enums;
 
 /**
  * @author az
  * @description 返回枚举类
  * @date 2022/3/10
  */
-public enum RespEnums {
+public enum ResponseEnums {
 
     /**
      * 成功
@@ -56,7 +54,7 @@ public enum RespEnums {
         this.msg = msg;
     }
 
-    RespEnums(Integer status, String msg) {
+    ResponseEnums(Integer status, String msg) {
         this.msg = msg;
         this.status = status;
     }

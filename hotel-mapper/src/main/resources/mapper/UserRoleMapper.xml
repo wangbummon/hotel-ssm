@@ -6,25 +6,26 @@
         <id column="role_id" jdbcType="INTEGER" property="roleId"/>
     </resultMap>
 
-    <delete id="deleteByPrimaryKey" parameterType="map">
-        DELETE
-        FROM sys_user_role
-        WHERE uid = #{userId,jdbcType=INTEGER}
-          AND rid = #{roleId,jdbcType=INTEGER}
+    <!--批量删除用户角色关系-->
+    <delete id="deleteUsersRoleByUserIds">
+        DELETE FROM sys_user_role WHERE user_id in
+        <foreach collection="userIds" item="userId" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
     </delete>
     <insert id="insert" parameterType="com.hotel.pojo.entity.UserRole">
-        INSERT INTO sys_user_role (uid, rid)
+        INSERT INTO sys_user_role (user_id, role_id)
         VALUES (#{userId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER})
     </insert>
     <select id="selectAll" resultMap="BaseResultMap">
-        SELECT uid, rid
+        SELECT user_id, role_id
         FROM sys_user_role
         <where>
-            <if test="uid!=null">
-                AND uid = #{uid}
+            <if test="userId!=null">
+                AND user_id = #{userId}
             </if>
-            <if test="rid!=null">
-                AND rid = #{rid}
+            <if test="roleId!=null">
+                AND role_id = #{roleId}
             </if>
         </where>
     </select>

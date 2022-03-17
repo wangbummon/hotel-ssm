@@ -56,8 +56,8 @@ public class PermissionServiceImpl implements PermissionService {
         homeInfo.put("title", "首页");
         homeInfo.put("href", "/admin/desktop");
         //保存logoInfo对象信息
-        logoInfo.put("title", "酒店管理系统");
-        logoInfo.put("image", "/static/layui/images/logo.png");
+        logoInfo.put("title", "后台管理系统");
+        logoInfo.put("image", "/static/images/logo.png");
         logoInfo.put("href", "/index.jsp");
         //保存menuInfo对象信息
         map.put("menuInfo", TreeUtils.toTree(menuList, 0));

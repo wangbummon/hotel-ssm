@@ -1,7 +1,7 @@
 package com.hotel.util;
 
 import com.github.pagehelper.PageInfo;
-import com.hotel.pojo.response.RespVO;
+import com.hotel.pojo.vo.ResponseVO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +20,15 @@ public class CheckUtils {
      * @param listClass 转换类的class
      * @return
      */
-    public static <E, T> RespVO checkEmpty(List<E> sources, Class<T> listClass) {
+    public static <E, T> ResponseVO checkEmpty(List<E> sources, Class<T> listClass) {
         List<T> targetList = new ArrayList<>();
         //将源集合转换为VO集合
         MyBeanUtils.convertList2List(sources, targetList, listClass);
         PageInfo<T> pageInfo = new PageInfo<>(targetList);
         if (targetList.isEmpty() || pageInfo.getTotal() <= 0) {
-            return RespUtils.empty();
+            return ResponseUtils.empty();
         }
-        return RespUtils.success(pageInfo);
+        return ResponseUtils.success(pageInfo);
     }
 
     /**
@@ -37,10 +37,10 @@ public class CheckUtils {
      * @param result 执行结果
      * @return
      */
-    public static RespVO checkSuccess(boolean result) {
+    public static ResponseVO checkSuccess(boolean result) {
         if (result) {
-            return RespUtils.success();
+            return ResponseUtils.success();
         }
-        return RespUtils.failed();
+        return ResponseUtils.failed();
     }
 }

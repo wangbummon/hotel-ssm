@@ -1,6 +1,8 @@
 package com.hotel.mapper;
 
 import com.hotel.pojo.entity.Users;
+import com.hotel.pojo.po.UsersPO;
+import com.hotel.pojo.vo.UsersVO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -13,7 +15,7 @@ public interface UsersMapper {
      * @param id 主键
      * @return 0 or 1
      */
-    int deleteByPrimaryKey(Integer id);
+    boolean deleteByPrimaryKey(Integer id);
 
     /**
      * 新增用户
@@ -21,7 +23,7 @@ public interface UsersMapper {
      * @param record 用户实体类
      * @return 0 or 1
      */
-    int insert(Users record);
+    boolean insert(Users record);
 
     /**
      * 根据id查询用户详情
@@ -44,7 +46,7 @@ public interface UsersMapper {
      * @param record 用户实体类
      * @return 0 or 1
      */
-    int updateByPrimaryKey(Users record);
+    boolean updateByPrimaryKey(Users record);
 
     /**
      * 根据用户名查询用户信息
@@ -61,5 +63,19 @@ public interface UsersMapper {
      * @return
      */
     @Select("SELECT count(id) FROM sys_users WHERE dept_id = #{deptId}")
-    int selectUserByDeptId(@Param("deptId") Integer deptId);
+    int selectUserCountByDeptId(@Param("deptId") Integer deptId);
+
+    /**
+     * 查询用户列表
+     * @param params 用户PO
+     * @return
+     */
+    List<Users> getUser(UsersPO params);
+
+    /**
+     * 批量删除用户
+     * @param userIds 用户的id列表
+     * @return
+     */
+    boolean removeUsers(@Param("userIds") List userIds);
 }

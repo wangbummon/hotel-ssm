@@ -3,20 +3,21 @@ package com.hotel.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.hotel.mapper.RoleMapper;
 import com.hotel.mapper.UserRoleMapper;
-import com.hotel.mapper.UsersMapper;
 import com.hotel.pojo.entity.Role;
 import com.hotel.pojo.po.RolePO;
-import com.hotel.pojo.response.RespVO;
+import com.hotel.pojo.vo.ResponseVO;
 import com.hotel.pojo.vo.RoleVO;
 import com.hotel.service.RoleService;
 import com.hotel.util.CheckUtils;
 import com.hotel.util.MyBeanUtils;
-import com.hotel.util.RespUtils;
+import com.hotel.util.ResponseUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author az
@@ -40,7 +41,7 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public RespVO getRole(RolePO params) {
+    public ResponseVO getRole(RolePO params) {
         role = new Role();
         MyBeanUtils.copyProperties(params, role);
         PageHelper.startPage(params.getPageNum(), params.getPageSize());
@@ -55,7 +56,7 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public RespVO addRole(RolePO params) {
+    public ResponseVO addRole(RolePO params) {
         role = new Role();
         MyBeanUtils.copyProperties(params, role);
         role.setRoleCode(role.getRoleCode().toUpperCase());
@@ -72,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public RespVO modifyRole(RolePO params) {
+    public ResponseVO modifyRole(RolePO params) {
         role = new Role();
         MyBeanUtils.copyProperties(params, role);
         return CheckUtils.checkSuccess(roleMapper.updateByPrimaryKey(role));
@@ -85,7 +86,7 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public RespVO removeRole(Integer id) {
+    public ResponseVO removeRole(Integer id) {
         return CheckUtils.checkSuccess(roleMapper.deleteByPrimaryKey(id));
     }
 
@@ -96,11 +97,69 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public RespVO getRoleUserCount(Integer roleId) {
+    public ResponseVO getRoleUserCount(Integer roleId) {
         int count = userRoleMapper.getRoleUserCount(roleId);
         if (count > 0) {
-            return RespUtils.hasLinked();
+            return ResponseUtils.hasLinked("该角色有用户在使用，操作失败！");
         }
-        return RespUtils.success(count);
+        return ResponseUtils.success(count);
+    }
+
+    /**
+     * 初始化角色数据
+     *
+     * @param id 用户id
+     * @return
+     */
+    @Override
+    public ResponseVO initRoleData(Integer id) {
+        //查询所有角色的map集合的列表
+        List<Map<String, Object>> roleListByMap = roleMapper.getRoleListByMap();
+        //根据用户id查询其拥有的角色
+        List<Integer> roleIdByUserId = roleMapper.getRoleIdByUserId(id);
+
+        for (Map<String, Object> map : roleListByMap) {
+            boolean checked = false;
+            Integer rid = (Integer) map.get("id");
+            for (Integer roleId : roleIdByUserId) {
+                if (roleId.equals(rid)) {
+                    checked = true;
+                    break;
+                }
+            }
+            map.put("LAY_CHECKED", checked);
+        }
+        return ResponseUtils.success(roleListByMap);
+    }
+
+    /**
+     * 查询多选角色下是否有用户在使用
+     *
+     * @param ids 逗号拼接的角色id
+     * @return
+     */
+    @Override
+    public ResponseVO getRolesUserCount(String ids) {
+        String[] roleIds = ids.split(",");
+        for (String roleId : roleIds) {
+            int count = userRoleMapper.getRoleUserCount(Integer.valueOf(roleId));
+            if (count > 0) {
+                return ResponseUtils.hasLinked("有用户在使用的角色，操作失败！");
+            }
+        }
+        return ResponseUtils.success();
+    }
+
+    /**
+     * 批量删除角色
+     *
+     * @param ids 逗号拼接的角色id
+     * @return
+     */
+    @Override
+    public ResponseVO removeRoles(String ids) {
+        List roleIds = Arrays.asList(ids.split(","));
+        boolean remove = roleMapper.removeRoles(roleIds);
+        return CheckUtils.checkSuccess(remove);
     }
 }

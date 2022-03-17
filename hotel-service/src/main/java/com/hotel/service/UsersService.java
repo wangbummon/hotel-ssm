@@ -1,5 +1,8 @@
 package com.hotel.service;
 
+import com.hotel.pojo.po.UserRolePO;
+import com.hotel.pojo.po.UsersPO;
+import com.hotel.pojo.vo.ResponseVO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -9,4 +12,52 @@ import org.springframework.security.core.userdetails.UserDetailsService;
  */
 public interface UsersService extends UserDetailsService {
 
+    /**
+     * 查询用户列表
+     * @param params 用户PO
+     * @return
+     */
+    ResponseVO getUser(UsersPO params);
+
+    /**
+     * 新增用户
+     * @param params 用户PO
+     * @return
+     */
+    ResponseVO addUser(UsersPO params);
+
+    /**
+     * 根据id修改用户信息
+     * @param params 用户PO
+     * @return
+     */
+    ResponseVO modifyUsers(UsersPO params);
+
+    /**
+     * 根据id删除用户
+     * @param id
+     * @return
+     */
+    ResponseVO removeUser(Integer id);
+
+    /**
+     * 根据id重置用户密码
+     * @param id
+     * @return
+     */
+    ResponseVO resetPwd(Integer id);
+
+    /**
+     * 根据用户id分配角色
+     * @param userRolePO 用户角色关系PO
+     * @return
+     */
+    ResponseVO saveUserRoles(UserRolePO userRolePO);
+
+    /**
+     * 批量删除用户
+     * @param ids 逗号拼接的用户id
+     * @return
+     */
+    ResponseVO removeUsers(String ids);
 }

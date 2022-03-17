@@ -7,7 +7,7 @@
     <%--获取CSRF头，默认为X-CSRF-TOKEN--%>
     <meta name="_csrf_header" content="${_csrf.headerName}"/>
     <meta charset="utf-8">
-    <title>layui</title>
+    <title>部门管理</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -189,6 +189,7 @@
             }
         });
 
+
         // 监听搜索操作
         form.on('submit(data-search-btn)', function (data) {
             tableIns.reload({
@@ -210,6 +211,9 @@
                 case 'add':
                     openAddWindow();
                     break;
+                case 'delete':
+                    deleteByIds(obj)
+                    break;
             }
         });
 
@@ -227,7 +231,6 @@
                 content: $("#addWindow"),
                 success: function () {
                     $("#addFrm")[0].reset();
-                    url = "/admin/depts"
                 }
             });
         }
@@ -237,25 +240,75 @@
          */
         form.on('submit(doAdd)', function (data) {
             $.ajax({
-                url: url,
+                url: "/admin/depts/",
                 type: "POST",
                 data: JSON.stringify(data.field),
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8',
                 success: function (result) {
                     if (result.code === 0) {
-                        layer.msg(result.msg, {icon: 1})
+                        layer.msg(result.msg)
                         //数据刷新
                         tableIns.reload();
                         //关闭当前窗口
                         layer.close(mainIndex);
                     } else {
-                        layer.msg(result.msg, {icon: 2})
+                        layer.msg(result.msg)
                     }
                 }
             })
             return false;
         });
+
+        /**
+         * 批量删除部门
+         * @param obj
+         */
+        function deleteByIds(obj) {
+            let checkStatus = table.checkStatus('currentTableId');
+            let idArr = [],
+                ids = "";
+            if (checkStatus.data.length > 0) {
+                for (let i = 0; i < checkStatus.data.length; i++) {
+                    idArr.push(checkStatus.data[i].id);
+                    ids = idArr.join(",");
+                }
+                console.log(ids)
+                $.ajax({
+                    url: "/admin/dept-user",
+                    type: "GET",
+                    data: {"ids": ids},
+                    success: function (result) {
+                        if (result.code === 1) {
+                            layer.msg(result.msg);
+                        } else {
+                            layer.confirm("确定要删除所选部门吗？", {
+                                icon: 3,
+                                title: "提示"
+                            }, function (index) {
+                                $.ajax({
+                                    url: "/admin/depts/" + ids,
+                                    type: "DELETE",
+                                    data: {"ids": ids},
+                                    success: function (result) {
+                                        if (result.code === 0) {
+                                            layer.msg(result.msg)
+                                            //数据刷新
+                                            tableIns.reload();
+                                            layer.close(index);
+                                        } else {
+                                            layer.msg(result.msg)
+                                        }
+                                    }
+                                })
+                            });
+                        }
+                    }
+                });
+            } else {
+                layer.msg("请选择要删除的部门");
+            }
+        }
 
 
         /**
@@ -283,7 +336,6 @@
                 area: ["800px", "400px"],
                 content: $("#updateWindow"),
                 success: function () {
-                    url = "/admin/depts";
                     //表单数据回显
                     form.val("updateFrm", data);
                 }
@@ -295,20 +347,20 @@
          */
         form.on('submit(doEdit)', function (data) {
             $.ajax({
-                url: url,
+                url: "/admin/depts/" + data.id,
                 type: "PUT",
                 data: JSON.stringify(data.field),
                 dataType: 'json',
                 contentType: 'application/json;charset=utf-8',
                 success: function (result) {
                     if (result.code === 0) {
-                        layer.msg(result.msg, {icon: 1})
+                        layer.msg(result.msg)
                         //数据刷新
                         tableIns.reload();
                         //关闭当前窗口
                         layer.close(mainIndex);
                     } else {
-                        layer.msg(result.msg, {icon: 2})
+                        layer.msg(result.msg)
                     }
                 }
             })
@@ -329,19 +381,22 @@
                         layer.msg(result.msg);
                     } else {
                         //提示用户是否确定删除
-                        layer.confirm("确定要删除该部门吗？", {icon: 3, title: "警告"}, function (index) {
+                        layer.confirm("确定要删除部门[<font color='red' >" + data.deptName + "</font>]吗？", {
+                            icon: 3,
+                            title: "提示"
+                        }, function (index) {
                             //发送删除部门的请求
                             $.ajax({
-                                url: "/admin/depts/" + data.id,
+                                url: "/admin/dept/" + data.id,
                                 type: "DELETE",
                                 data: {"id": data.id},
                                 success: function (result) {
                                     if (result.code === 0) {
-                                        layer.msg(result.msg, {icon: 1})
+                                        layer.msg(result.msg)
                                         //数据刷新
                                         tableIns.reload();
                                     } else {
-                                        layer.msg(result.msg, {icon: 2})
+                                        layer.msg(result.msg)
                                     }
                                 }
                             })

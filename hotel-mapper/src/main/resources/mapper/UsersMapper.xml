@@ -14,7 +14,7 @@
         <result column="user_type" jdbcType="INTEGER" property="userType"/>
         <result column="hire_date" jdbcType="TIMESTAMP" property="hireDate"/>
         <result column="created_user" jdbcType="INTEGER" property="createdUser"/>
-        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="created_date" jdbcType="TIMESTAMP" property="createdDate"/>
         <result column="modify_user" jdbcType="INTEGER" property="modifyUser"/>
         <result column="modify_date" jdbcType="TIMESTAMP" property="modifyDate"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
@@ -25,6 +25,16 @@
         <collection property="roleList" column="id" select="com.hotel.mapper.RoleMapper.selectRoleByUserId"/>
     </resultMap>
 
+    <!--用户部门关系-->
+    <resultMap id="UserDeptResultMap" type="com.hotel.pojo.po.UsersPO" extends="BaseResultMap">
+        <association property="dept" javaType="com.hotel.pojo.entity.Dept">
+            <id property="id" column="id"/>
+            <result property="deptName" column="dept_name"/>
+            <result property="address" column="address"/>
+
+        </association>
+    </resultMap>
+
     <!--根据id删除用户-->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         DELETE
@@ -33,39 +43,75 @@
             id = #{id,jdbcType=INTEGER}
         </where>
     </delete>
+    <!--批量删除用户-->
+    <delete id="removeUsers">
+        DELETE FROM sys_users WHERE id in
+        <foreach collection="userIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
     <!--新增用户-->
     <insert id="insert" parameterType="com.hotel.pojo.entity.Users">
-        INSERT INTO sys_users (id, username, password,
+        INSERT INTO sys_users (username, password,
                                real_name, sex, dept_id,
                                status, email, phone,
                                user_type, hire_date, created_user,
-                               create_date, modify_user, modify_date,
+                               created_date, modify_user, modify_date,
                                remark)
-        VALUES (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+        VALUES (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
                 #{realName,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{deptId,jdbcType=INTEGER},
                 #{status,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
                 #{userType,jdbcType=INTEGER}, #{hireDate,jdbcType=TIMESTAMP}, #{createdUser,jdbcType=INTEGER},
-                #{createDate,jdbcType=TIMESTAMP}, #{modifyUser,jdbcType=INTEGER}, #{modifyDate,jdbcType=TIMESTAMP},
+                #{createdDate,jdbcType=TIMESTAMP}, #{modifyUser,jdbcType=INTEGER}, #{modifyDate,jdbcType=TIMESTAMP},
                 #{remark,jdbcType=VARCHAR})
     </insert>
     <!--根据id修改用户信息-->
     <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Users">
         UPDATE sys_users
-        SET username = #{username,jdbcType=VARCHAR},
-        password = #{password,jdbcType=VARCHAR},
-        real_name = #{realName,jdbcType=VARCHAR},
-        sex = #{sex,jdbcType=INTEGER},
-        dept_id = #{deptId,jdbcType=INTEGER},
-        status = #{status,jdbcType=INTEGER},
-        email = #{email,jdbcType=VARCHAR},
-        phone = #{phone,jdbcType=VARCHAR},
-        user_type = #{userType,jdbcType=INTEGER},
-        hire_date = #{hireDate,jdbcType=TIMESTAMP},
-        created_user = #{createdUser,jdbcType=INTEGER},
-        create_date = #{createDate,jdbcType=TIMESTAMP},
-        modify_user = #{modifyUser,jdbcType=INTEGER},
-        modify_date = #{modifyDate,jdbcType=TIMESTAMP},
-        remark = #{remark,jdbcType=VARCHAR}
+        <set>
+            <if test="username!=null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+            <if test="password!=null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="realName!=null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="sex!=null">
+                sex = #{sex,jdbcType=INTEGER},
+            </if>
+            <if test="deptId!=null">
+                dept_id = #{deptId,jdbcType=INTEGER},
+            </if>
+            <if test="status!=null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="email!=null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone!=null">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="userType!=null">
+                user_type = #{userType,jdbcType=INTEGER},
+            </if>
+            <if test="hireDate!=null">
+                hire_date = #{hireDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdDate!=null">
+                created_date = #{createdDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUser!=null">
+                modify_user = #{modifyUser,jdbcType=INTEGER},
+            </if>
+            <if test="modifyDate!=null">
+                modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark!=null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
         <where>
             id = #{id,jdbcType=INTEGER}
         </where>
@@ -84,7 +130,7 @@
         user_type,
         hire_date,
         created_user,
-        create_date,
+        created_date,
         modify_user,
         modify_date,
         remark
@@ -107,7 +153,7 @@
                user_type,
                hire_date,
                created_user,
-               create_date,
+               created_date,
                modify_user,
                modify_date,
                remark
@@ -127,13 +173,62 @@
         user_type,
         hire_date,
         created_user,
-        create_date,
+        created_date,
         modify_user,
         modify_date,
         remark
         FROM sys_users
         <where>
             username = #{username}
+        </where>
+    </select>
+    <!--查询用户列表-->
+    <select id="getUser" resultMap="UserDeptResultMap">
+        SELECT su.id,
+        su.username,
+        su.password,
+        su.real_name,
+        su.sex,
+        su.dept_id,
+        su.status,
+        su.email,
+        su.phone,
+        su.user_type,
+        su.hire_date,
+        su.created_user,
+        su.created_date,
+        su.modify_user,
+        su.modify_date,
+        su.remark,
+        sd.dept_name
+        FROM sys_users su
+        LEFT JOIN sys_dept sd ON su.dept_id = sd.id
+        <where>
+            <if test="username!=null and username!=''">
+                AND su.username LIKE CONCAT('%',#{username},'%')
+            </if>
+            <if test="realName!=null and realName!=''">
+                AND su.real_name LIKE CONCAT('%',#{realName},'%')
+            </if>
+            <if test="sex!=null">
+                AND su.sex = #{sex}
+            </if>
+            <if test="deptId!=null">
+                AND su.dept_id = #{deptId}
+            </if>
+            <if test="phone!=null and phone!=''">
+                AND su.phone LIKE　CONCAT('%',#{phone},'%')
+            </if>
+            <if test="userType!=null">
+                AND su.user_type = #{userType}
+            </if>
+            <if test="startDate!=null">
+                <![CDATA[ AND su.hire_date >= #{startDate} ]]>
+            </if>
+            <if test="endDate!=null">
+                <![CDATA[ AND su.hire_date <= #{endDate} ]]>
+
+            </if>
         </where>
     </select>
 </mapper>
