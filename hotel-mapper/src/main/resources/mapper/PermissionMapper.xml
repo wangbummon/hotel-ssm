@@ -12,13 +12,54 @@
         <result column="spread" property="spread" jdbcType="INTEGER"/>
         <result column="target" property="target" jdbcType="VARCHAR"/>
     </resultMap>
+    <!--新增权限菜单-->
+    <insert id="insertPermission">
+        INSERT INTO sys_permission(parent_id, type, title, permission_code, icon, href, spread, target)
+        VALUES (#{parentId}, #{type}, #{title}, #{permissionCode}, #{icon}, #{href}, #{spread}, #{target})
+    </insert>
+    <!--根据id修改权限菜单信息-->
+    <update id="modifyPermissionById">
+        UPDATE sys_permission
+        <set>
+            <if test="parentId!=null">
+                parent_id = #{parentId},
+            </if>
+            <if test="type!=null and type!=''">
+                type = #{type},
+            </if>
+            <if test="title!=null and title !=''">
+                title = #{title}
+            </if>
+            <if test="permissionCode!=null and permissionCode!=''">
+                permission_code = #{permissionCode},
+            </if>
+            <if test="icon!=null and icon!=''">
+                icon = #{icon},
+            </if>
+            <if test="href!=null and href!=''">
+                href = #{href},
+            </if>
+            <if test="spread!=null">
+                spread = #{spread},
+            </if>
+            <if test="target!=null and target!=''">
+                target = #{target},
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
     <!--查询所有菜单-->
     <select id="selectAllPermission" resultMap="BaseResultMap">
         SELECT id, parent_id, type, title, permission_code, icon, href, spread, target
         FROM sys_permission
         <where>
             <if test="type != null and type != ''">
-                type = #{type}
+                AND type = #{type}
+            </if>
+            <if test="id!=null">
+                AND id = #{id} OR parent_id = #{id}
             </if>
         </where>
     </select>

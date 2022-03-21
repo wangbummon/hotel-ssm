@@ -5,6 +5,8 @@ import com.hotel.pojo.po.UsersPO;
 import com.hotel.pojo.vo.ResponseVO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author az
  * @description
@@ -15,23 +17,26 @@ public interface UsersService extends UserDetailsService {
     /**
      * 查询用户列表
      * @param params 用户PO
+     * @param request
      * @return
      */
-    ResponseVO getUser(UsersPO params);
+    ResponseVO getUser(UsersPO params,HttpServletRequest request);
 
     /**
      * 新增用户
      * @param params 用户PO
+     * @param request
      * @return
      */
-    ResponseVO addUser(UsersPO params);
+    ResponseVO addUser(UsersPO params, HttpServletRequest request);
 
     /**
      * 根据id修改用户信息
      * @param params 用户PO
+     * @param request
      * @return
      */
-    ResponseVO modifyUsers(UsersPO params);
+    ResponseVO modifyUsers(UsersPO params,HttpServletRequest request);
 
     /**
      * 根据id删除用户
@@ -43,9 +48,10 @@ public interface UsersService extends UserDetailsService {
     /**
      * 根据id重置用户密码
      * @param id
+     * @param request
      * @return
      */
-    ResponseVO resetPwd(Integer id);
+    ResponseVO resetPwd(Integer id, HttpServletRequest request);
 
     /**
      * 根据用户id分配角色

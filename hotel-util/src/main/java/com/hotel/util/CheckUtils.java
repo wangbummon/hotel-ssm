@@ -28,7 +28,7 @@ public class CheckUtils {
         if (targetList.isEmpty() || pageInfo.getTotal() <= 0) {
             return ResponseUtils.empty();
         }
-        return ResponseUtils.success(pageInfo);
+        return ResponseUtils.success(pageInfo.getTotal(), pageInfo.getList());
     }
 
     /**

@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -73,11 +74,19 @@ public class UsersServiceImpl implements UsersService {
     /**
      * 查询用户列表
      *
-     * @param params 用户PO
+     * @param params  用户PO
+     * @param request
      * @return
      */
     @Override
-    public ResponseVO getUser(UsersPO params) {
+    public ResponseVO getUser(UsersPO params, HttpServletRequest request) {
+        //获取当前登录用户对象
+        Users loginUser = usersMapper.selectUsersByUsername(request.getUserPrincipal().getName());
+        //判断是否为后台普通用户 若是则只查询userType为2的数据
+        if (null != loginUser && loginUser.getUserType() == 2) {
+            params.setUserType(2);
+        }
+
         if (Objects.equals(params.getStartDate(), "")) {
             params.setStartDate(null);
         }
@@ -85,38 +94,51 @@ public class UsersServiceImpl implements UsersService {
             params.setEndDate(null);
         }
         PageHelper.startPage(params.getPageNum(), params.getPageSize());
-        List<Users> usersList = usersMapper.getUser(params);
+        List<Users> usersList = usersMapper.getUserList(params);
         return CheckUtils.checkEmpty(usersList, UsersVO.class);
     }
 
     /**
      * 新增用户
      *
-     * @param params 用户PO
+     * @param params  用户PO
+     * @param request
      * @return
      */
     @Override
-    public ResponseVO addUser(UsersPO params) {
+    public ResponseVO addUser(UsersPO params, HttpServletRequest request) {
         users = new Users();
         MyBeanUtils.copyProperties(params, users);
         users.setCreatedDate(new Date());
+        //通过用户名查询用户信息 并保存创建人id
+        String username = request.getUserPrincipal().getName();
+        Integer userId = usersMapper.getUserIdByUsername(username);
+        //设置创建人
+        users.setCreatedUser(userId);
         //设置密文密码保存至数据库 这里指定所有用户初始密码均为123456
         users.setPassword(PasswordUtils.encode(DataEnums.DEFAULT_PASSWORD.getData()));
+        //默认为后台的普通用户
+        users.setUserType(2);
         return CheckUtils.checkSuccess(usersMapper.insert(users));
     }
 
     /**
      * 根据id修改用户信息
      *
-     * @param params 用户PO
+     * @param params  用户PO
+     * @param request
      * @return
      */
 
     @Override
-    public ResponseVO modifyUsers(UsersPO params) {
+    public ResponseVO modifyUsers(UsersPO params, HttpServletRequest request) {
         users = new Users();
         MyBeanUtils.copyProperties(params, users);
         users.setModifyDate(new Date());
+        //通过用户名获取用户信息 并保存修改人id
+        String username = request.getUserPrincipal().getName();
+        Integer userId = usersMapper.getUserIdByUsername(username);
+        users.setModifyUser(userId);
         return CheckUtils.checkSuccess(usersMapper.updateByPrimaryKey(users));
     }
 
@@ -136,15 +158,19 @@ public class UsersServiceImpl implements UsersService {
     /**
      * 根据id重置用户密码
      *
-     * @param id 用户id
+     * @param id      用户id
+     * @param request
      * @return
      */
     @Override
-    public ResponseVO resetPwd(Integer id) {
+    public ResponseVO resetPwd(Integer id, HttpServletRequest request) {
+        String username = request.getUserPrincipal().getName();
+        int userId = usersMapper.getUserIdByUsername(username);
         //将密码重置为加密后的默认密码 123456
         users = Users.builder()
                 .id(id)
                 .password(PasswordUtils.encode(DataEnums.DEFAULT_PASSWORD.getData()))
+                .modifyUser(userId)
                 .modifyDate(new Date())
                 .build();
 

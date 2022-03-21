@@ -375,18 +375,20 @@
                 },
                 {
                     field: 'status', title: '状态', width: 150, align: "center", templet: function (data) {
-                        if (data.status == 1) {
+                        console.log(data.status)
+                        if (data.status === 1) {
                             return '<div> <input type="checkbox" checked="" name="status" lay-skin="switch" id="open" lay-filter="statusSwitch" userId=' + data.id + '' +
-                                ' lay-text="启用|已禁用"  value=' + data.state + '></div>';
+                                ' lay-text="启用|已禁用"  value=' + data.status + '></div>';
                         }
                         return '<div> <input type="checkbox" lay-skin="switch" name="status"  userId=' + data.id + ' lay-filter="statusSwitch"' +
-                            'lay-text="启用|已禁用" value=' + data.state + '></div>';
+                            'lay-text="启用|已禁用" value=' + data.status + '></div>';
                     }
                 },
                 {field: 'hireDate', width: 160, title: '入职日期', sort: true, align: "center"},
                 {title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center"}
             ]],
             page: true,
+            limit: 20,
             done: function (res, curr, count) {
                 if (curr > 1 && res.data.lenth === 0) {
                     tableIns:reload({
@@ -401,15 +403,13 @@
             //开关是否开启 开启后 checked赋值1 否则赋值0
             let checked = data.elem.checked ? 1 : 0;
             //获取所需属性值
-            let switchId = data.elem.attributes['userId'].nodeValue;
-            console.log(checked);
-            console.log(switchId);
+            let userId = data.elem.attributes['userId'].nodeValue;
             // layer.confirm("确定要执行此操作吗？", {icon: 3, title: "提示"}, function (index) {
             $.ajax({
-                url: "/admin/users",
+                url: "/admin/users/" + userId,
                 type: "PUT",
                 data: JSON.stringify({
-                    "id": switchId,
+                    "id": userId,
                     "status": checked
                 }),
                 dataType: 'json',
@@ -536,7 +536,7 @@
          */
         form.on('submit(doAdd)', function (data) {
             $.ajax({
-                url: "/admin/users",
+                url: "/admin/users/",
                 type: "POST",
                 data: JSON.stringify(data.field),
                 dataType: 'json',
@@ -587,9 +587,9 @@
                 area: ["800px", "500px"],
                 content: $("#updateWindow"),
                 success: function () {
-                    url = "/admin/users";
                     //表单数据回显
                     form.val("updateFrm", data);
+                    console.log(data)
                 }
             });
         }
@@ -599,7 +599,7 @@
          */
         form.on('submit(doEdit)', function (data) {
             $.ajax({
-                url: url,
+                url: "/admin/users/" + data.field.id,
                 type: "PUT",
                 data: JSON.stringify(data.field),
                 dataType: 'json',

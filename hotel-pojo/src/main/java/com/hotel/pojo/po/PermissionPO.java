@@ -1,5 +1,7 @@
 package com.hotel.pojo.po;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -13,6 +15,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PermissionPO {
 
     /**
@@ -68,4 +71,16 @@ public class PermissionPO {
      */
     @ApiModelProperty("打开方式")
     private String target;
+
+    /**
+     * 页码
+     */
+    @ApiModelProperty("页码")
+    private Integer pageNum;
+
+    /**
+     * 每页显示数量
+     */
+    @ApiModelProperty("每页显示数量")
+    private Integer pageSize;
 }

@@ -47,4 +47,10 @@ public class PageController {
     public String usersManager() {
         return "admin/usersManager";
     }
+
+    @ApiOperation("跳转至权限管理页面")
+    @RequestMapping("/permissionManager")
+    public String permissionManager(){
+        return "admin/permissionManager";
+    }
 }

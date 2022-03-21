@@ -100,7 +100,7 @@ public class RoleServiceImpl implements RoleService {
     public ResponseVO getRoleUserCount(Integer roleId) {
         int count = userRoleMapper.getRoleUserCount(roleId);
         if (count > 0) {
-            return ResponseUtils.hasLinked("该角色有用户在使用，操作失败！");
+            return ResponseUtils.hasLinked("该角色已被用户使用，无法删除！");
         }
         return ResponseUtils.success(count);
     }
@@ -144,7 +144,7 @@ public class RoleServiceImpl implements RoleService {
         for (String roleId : roleIds) {
             int count = userRoleMapper.getRoleUserCount(Integer.valueOf(roleId));
             if (count > 0) {
-                return ResponseUtils.hasLinked("有用户在使用的角色，操作失败！");
+                return ResponseUtils.hasLinked("所选角色含已被用户使用的角色，无法删除！");
             }
         }
         return ResponseUtils.success();

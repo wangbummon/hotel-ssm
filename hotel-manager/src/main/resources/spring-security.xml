@@ -11,8 +11,8 @@ http://www.springframework.org/schema/security/spring-security.xsd">
     <security:http pattern="/static/**" security="none"/>
 
     <!-- 执行失败后跳转的地址 -->
-    <security:http pattern="/failure.jsp" security="none"/>
-    <security:http pattern="/403.jsp" security="none"/>
+    <security:http pattern="/failure.html" security="none"/>
+    <security:http pattern="/403.html" security="none"/>
     <!-- web项目icon图标 -->
     <security:http pattern="/static/images/favicon.ico" security="none"/>
 
@@ -26,7 +26,7 @@ http://www.springframework.org/schema/security/spring-security.xsd">
                 login-page="/login.jsp"
                 login-processing-url="/login"
                 default-target-url="/index.jsp"
-                authentication-failure-url="/failure.jsp"
+                authentication-failure-url="/403.html"
                 username-parameter="username"
                 password-parameter="password"
         />
@@ -45,7 +45,7 @@ http://www.springframework.org/schema/security/spring-security.xsd">
          />
 
         <!--403异常处理-->
-        <security:access-denied-handler error-page="/403.jsp"/>
+        <security:access-denied-handler error-page="/403.html"/>
     </security:http>
 
     <!-- 注入密码加密类 -->

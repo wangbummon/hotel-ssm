@@ -185,6 +185,7 @@
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             page: true,
+            limit: 20,
             done: function (res, curr, count) {
                 if (curr > 1 && res.data.lenth === 0) {
                     tableIns:reload({

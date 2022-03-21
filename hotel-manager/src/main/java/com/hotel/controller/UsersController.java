@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author az
  * @description
@@ -24,20 +26,22 @@ public class UsersController {
 
     @ApiOperation("查询用户列表")
     @GetMapping("/users")
-    public ResponseVO getUsers(UsersPO params) {
-        return usersService.getUser(params);
+    public ResponseVO getUsers(UsersPO params,HttpServletRequest request) {
+        return usersService.getUser(params,request);
     }
 
     @ApiOperation("新增用户")
-    @PostMapping("/users")
-    public ResponseVO addUsers(@RequestBody UsersPO params) {
-        return usersService.addUser(params);
+    @PostMapping("/users/")
+    public ResponseVO addUsers(@RequestBody UsersPO params,
+                               HttpServletRequest request) {
+        return usersService.addUser(params, request);
     }
 
     @ApiOperation("修改用户")
     @PutMapping("/users/{id}")
-    public ResponseVO modifyUsers(@RequestBody UsersPO params) {
-        return usersService.modifyUsers(params);
+    public ResponseVO modifyUsers(@RequestBody UsersPO params,
+                                  HttpServletRequest request) {
+        return usersService.modifyUsers(params,request);
     }
 
     @ApiOperation("删除用户")
@@ -48,14 +52,14 @@ public class UsersController {
 
     @ApiOperation("批量删除用户")
     @DeleteMapping("/users/{ids}")
-    public ResponseVO removeUsers(@PathVariable String ids){
+    public ResponseVO removeUsers(@PathVariable String ids) {
         return usersService.removeUsers(ids);
     }
 
     @ApiOperation("重置用户密码")
     @PutMapping("/resetPwd/{id}")
-    public ResponseVO resetPwd(@PathVariable Integer id) {
-        return usersService.resetPwd(id);
+    public ResponseVO resetPwd(@PathVariable Integer id, HttpServletRequest request) {
+        return usersService.resetPwd(id, request);
     }
 
     @ApiOperation("根据id给用户分配角色")

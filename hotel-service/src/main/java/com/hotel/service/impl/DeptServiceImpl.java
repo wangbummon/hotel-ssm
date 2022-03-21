@@ -112,7 +112,7 @@ public class DeptServiceImpl implements DeptService {
     public ResponseVO getDeptUserCount(Integer deptId) {
         int count = usersMapper.selectUserCountByDeptId(deptId);
         if (count > 0) {
-            return ResponseUtils.hasLinked("该部门下有关联用户，删除失败！");
+            return ResponseUtils.hasLinked("该部门下有关联用户，无法删除！");
         }
         return ResponseUtils.success(count);
     }
@@ -161,7 +161,7 @@ public class DeptServiceImpl implements DeptService {
         for (String deptId : deptIds) {
             int count = usersMapper.selectUserCountByDeptId(Integer.valueOf(deptId));
             if (count > 0) {
-                return ResponseUtils.hasLinked("所选的某部门下有用户，操作失败！");
+                return ResponseUtils.hasLinked("所选的某部门下有用户，无法删除！");
             }
         }
         return ResponseUtils.success();

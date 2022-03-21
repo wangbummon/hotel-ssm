@@ -26,7 +26,6 @@ public class UsersVO {
     private Integer id;
 
     /**
-     *
      * 用户名
      */
     private String username;
@@ -60,6 +59,11 @@ public class UsersVO {
      * 手机号
      */
     private String phone;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
     /**
      * 入职日期

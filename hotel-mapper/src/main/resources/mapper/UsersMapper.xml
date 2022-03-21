@@ -183,7 +183,7 @@
         </where>
     </select>
     <!--查询用户列表-->
-    <select id="getUser" resultMap="UserDeptResultMap">
+    <select id="getUserList" resultMap="UserDeptResultMap">
         SELECT su.id,
         su.username,
         su.password,
@@ -227,7 +227,9 @@
             </if>
             <if test="endDate!=null">
                 <![CDATA[ AND su.hire_date <= #{endDate} ]]>
-
+            </if>
+            <if test="userType!=null">
+                AND user_type = #{userType}
             </if>
         </where>
     </select>

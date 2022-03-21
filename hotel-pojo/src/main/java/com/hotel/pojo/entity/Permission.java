@@ -3,6 +3,8 @@ package com.hotel.pojo.entity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import java.util.List;
+
 /**
  * @author az
  */
@@ -66,4 +68,7 @@ public class Permission {
      */
     @ApiModelProperty("打开方式")
     private String target;
+
+    @ApiModelProperty("子菜单")
+    private List<Permission> child;
 }

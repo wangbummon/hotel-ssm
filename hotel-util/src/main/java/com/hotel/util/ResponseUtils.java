@@ -24,22 +24,21 @@ public class ResponseUtils {
         return success(ResponseEnums.SUCCESS.getMsg(), data);
     }
 
-    public static <T> ResponseVO success(PageInfo<T> pageInfo) {
-        ResponseVO responseVO = new ResponseVO();
-        responseVO.setCode(0);
-        responseVO.setStatus(ResponseEnums.SUCCESS.getStatus());
-        responseVO.setMsg(ResponseEnums.SUCCESS.getMsg());
-        responseVO.setCount(pageInfo.getTotal());
-        responseVO.setData(pageInfo.getList());
-        return responseVO;
+    public static ResponseVO success(String msg, Object data) {
+        return success(msg, data, null);
     }
 
-    public static ResponseVO success(String msg, Object data) {
+    public static ResponseVO success(Long count, Object data) {
+        return success(null, data, count);
+    }
+
+    public static ResponseVO success(String msg, Object data, Long count) {
         ResponseVO responseVO = new ResponseVO();
         responseVO.setCode(0);
         responseVO.setStatus(ResponseEnums.SUCCESS.getStatus());
         responseVO.setMsg(msg);
         responseVO.setData(data);
+        responseVO.setCount(count);
         return responseVO;
     }
 
@@ -80,6 +79,7 @@ public class ResponseUtils {
         responseVO.setStatus(ResponseEnums.EMPTY.getStatus());
         responseVO.setMsg(ResponseEnums.EMPTY.getMsg());
         responseVO.setData(null);
+        responseVO.setCount(0L);
         return responseVO;
     }
 

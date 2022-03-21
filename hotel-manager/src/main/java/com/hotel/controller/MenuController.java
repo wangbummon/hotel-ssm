@@ -27,4 +27,5 @@ public class MenuController {
     public String getAllMenu(PermissionPO params){
         return permissionService.selectAllPermission(params);
     }
+
 }

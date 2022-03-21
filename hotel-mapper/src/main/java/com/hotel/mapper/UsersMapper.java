@@ -67,15 +67,26 @@ public interface UsersMapper {
 
     /**
      * 查询用户列表
+     *
      * @param params 用户PO
      * @return
      */
-    List<Users> getUser(UsersPO params);
+    List<Users> getUserList(UsersPO params);
 
     /**
      * 批量删除用户
+     *
      * @param userIds 用户的id列表
      * @return
      */
     boolean removeUsers(@Param("userIds") List userIds);
+
+    /**
+     * 通过用户名查询用户信息
+     *
+     * @param username 用户名
+     * @return
+     */
+    @Select("SELECT id FROM sys_users WHERE username = #{username}")
+    int getUserIdByUsername(String username);
 }

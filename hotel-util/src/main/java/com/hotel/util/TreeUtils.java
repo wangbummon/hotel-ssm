@@ -1,5 +1,6 @@
 package com.hotel.util;
 
+import com.hotel.pojo.entity.Permission;
 import com.hotel.pojo.vo.MenuNodeVO;
 
 import java.util.ArrayList;
@@ -53,4 +54,33 @@ public class TreeUtils {
         }
         return parent;
     }
+
+    public static List<Permission> loadMenuTree(List<Permission> treeList, Integer pid){
+        List<Permission> list = new ArrayList<>();
+        for (Permission parent : treeList) {
+            //如果传入的父级菜单id与集合中某个菜单的父级菜单id相等则将此条数据作为父类传入获取子菜单的方法中
+            if (pid.equals(parent.getParentId())) {
+                list.add(findMenuChildren(parent, treeList));
+            }
+        }
+        if (list.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return list;
+    }
+
+    private static Permission findMenuChildren(Permission parent, List<Permission> treeList) {
+        for (Permission child : treeList) {
+            //如果传入的父类id与所有菜单中某条数据的父类id相等则表示这条数据是传入父菜单的子菜单
+            if (parent.getId().equals(child.getParentId())) {
+                if (parent.getChild() == null) {
+                    parent.setChild(new ArrayList<>());
+                }
+                //自调用查看是否仍存在子节点 若存在则加入该数据的child集合中
+                parent.getChild().add(findMenuChildren(child, treeList));
+            }
+        }
+        return parent;
+    }
+
 }
