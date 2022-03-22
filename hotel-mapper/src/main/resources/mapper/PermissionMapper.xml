@@ -64,5 +64,22 @@
         </where>
     </select>
 
+    <!--根据用户id查询权限菜单-->
+    <select id="selectPermissionByUser" resultMap="BaseResultMap">
+        SELECT DISTINCT sp.*
+        FROM sys_permission sp
+                 INNER JOIN sys_role_permisson srp ON sp.id = srp.pid
+                 INNER JOIN sys_role sr ON srp.rid = sr.id
+                 INNER JOIN sys_user_role sur ON sr.id = sur.role_id
+        WHERE sur.user_id = #{userId}
+    </select>
+    <select id="selectPermissionByPids" resultType="com.hotel.pojo.entity.Permission">
+        SELECT id, parent_id, type, title, permission_code,icon, href, spread, target
+        FROM sys_permission WHERE id in
+        <foreach collection="currentRolePermissionIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
 
 </mapper>

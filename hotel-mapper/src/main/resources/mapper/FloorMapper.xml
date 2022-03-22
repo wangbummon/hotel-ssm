@@ -1,34 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hotel.mapper.FloorMapper" >
-  <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Floor" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="floor_name" property="floorName" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_floor
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.hotel.pojo.entity.Floor" >
-    insert into t_floor (id, floor_name, remark
-      )
-    values (#{id,jdbcType=INTEGER}, #{floorName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
-      )
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Floor" >
-    update t_floor
-    set floor_name = #{floorName,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select id, floor_name, remark
-    from t_floor
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select id, floor_name, remark
-    from t_floor
-  </select>
+<mapper namespace="com.hotel.mapper.FloorMapper">
+    <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Floor">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="floor_name" property="floorName" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--删除楼层-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE
+        FROM t_floor
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <!--新增楼层-->
+    <insert id="insert" parameterType="com.hotel.pojo.entity.Floor">
+        INSERT INTO t_floor (id, floor_name, remark)
+        VALUES (#{id,jdbcType=INTEGER}, #{floorName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+    </insert>
+
+    <!--修改楼层信息-->
+    <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Floor">
+        UPDATE t_floor
+        <set>
+            <if test="floorName!=null and floorName!=''">
+                floor_name = #{floorName,jdbcType=VARCHAR},
+            </if>
+            <if test="remark!=null and remark!=''">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--根据主键查询楼层详情-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT id, floor_name, remark
+        FROM t_floor
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--查询所有楼层-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT id, floor_name, remark
+        FROM t_floor
+    </select>
+
+    <!--带关键字的查询-->
+    <select id="selectFloorList" resultMap="BaseResultMap">
+        SELECT id, floor_name, remark FROM t_floor
+        <where>
+            <if test="floorName!=null and floorName!=''">
+                AND floor_name = #{floorName}
+            </if>
+        </where>
+    </select>
 </mapper>

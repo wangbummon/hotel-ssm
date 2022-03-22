@@ -1,4 +1,4 @@
-package com.hotel.controller;
+package com.hotel.controller.admin;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -50,7 +50,13 @@ public class PageController {
 
     @ApiOperation("跳转至权限管理页面")
     @RequestMapping("/permissionManager")
-    public String permissionManager(){
+    public String permissionManager() {
         return "admin/permissionManager";
+    }
+
+    @ApiOperation("跳转至楼层管理页面")
+    @RequestMapping("/floorManager")
+    public String floorManager() {
+        return "admin/floorManager";
     }
 }

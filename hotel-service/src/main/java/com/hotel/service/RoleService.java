@@ -11,6 +11,7 @@ import com.hotel.pojo.vo.ResponseVO;
 public interface RoleService {
     /**
      * 查询角色
+     *
      * @param params 角色PO
      * @return
      */
@@ -18,6 +19,7 @@ public interface RoleService {
 
     /**
      * 新增角色
+     *
      * @param params 角色PO
      * @return
      */
@@ -25,6 +27,7 @@ public interface RoleService {
 
     /**
      * 修改角色
+     *
      * @param params 角色PO
      * @return
      */
@@ -32,6 +35,7 @@ public interface RoleService {
 
     /**
      * 删除角色
+     *
      * @param id 角色id
      * @return
      */
@@ -39,6 +43,7 @@ public interface RoleService {
 
     /**
      * 查询该角色是否有用户在使用
+     *
      * @param roleId 角色id
      * @return
      */
@@ -46,6 +51,7 @@ public interface RoleService {
 
     /**
      * 初始化角色数据
+     *
      * @param id 用户id
      * @return
      */
@@ -53,6 +59,7 @@ public interface RoleService {
 
     /**
      * 查询多选角色是否有用户在使用
+     *
      * @param ids 逗号拼接的角色id
      * @return
      */
@@ -60,8 +67,18 @@ public interface RoleService {
 
     /**
      * 批量删除角色
+     *
      * @param ids 逗号拼接的角色id
      * @return
      */
     ResponseVO removeRoles(String ids);
+
+    /**
+     * 初始化权限菜单
+     *
+     * @return
+     */
+    ResponseVO initRoleMenu();
+
+
 }

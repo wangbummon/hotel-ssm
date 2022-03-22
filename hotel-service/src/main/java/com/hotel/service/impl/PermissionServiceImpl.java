@@ -3,7 +3,10 @@ package com.hotel.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.hotel.mapper.PermissionMapper;
+import com.hotel.mapper.RolePermissionMapper;
+import com.hotel.mapper.UsersMapper;
 import com.hotel.pojo.entity.Permission;
+import com.hotel.pojo.entity.Users;
 import com.hotel.pojo.po.PermissionPO;
 import com.hotel.pojo.vo.MenuNodeVO;
 import com.hotel.pojo.vo.PermissionVO;
@@ -18,10 +21,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -35,17 +40,20 @@ import java.util.stream.Collectors;
 public class PermissionServiceImpl implements PermissionService {
 
     private final PermissionMapper permissionMapper;
+    private final UsersMapper usersMapper;
+    private final RolePermissionMapper rolePermissionMapper;
 
     private Permission permission = new Permission();
 
     /**
      * 查询所有菜单
      *
-     * @param params 菜单PO
+     * @param params  菜单PO
+     * @param request
      * @return
      */
     @Override
-    public String selectAllPermission(PermissionPO params) {
+    public String selectAllPermission(PermissionPO params, HttpServletRequest request) {
         //保存layui中初始化后台左侧菜单栏信息
         Map<String, Object> map = new LinkedHashMap<>();
         //有序保存homeInfo信息
@@ -53,7 +61,10 @@ public class PermissionServiceImpl implements PermissionService {
         //有序保存logoInfo信息
         Map<String, Object> logoInfo = new LinkedHashMap<>();
 
-        List<Permission> menus = permissionMapper.selectAllPermission(params);
+        //根据用户名获取当前登录用户
+        Users loginUser = usersMapper.getUserIdByUsername(request.getUserPrincipal().getName());
+
+        List<Permission> menus = permissionMapper.selectPermissionByUser(loginUser.getId());
         //筛选出type为menu的集合
         List<Permission> collect = menus.stream().filter(item ->
                         "menu".equals(item.getType()))
@@ -87,18 +98,15 @@ public class PermissionServiceImpl implements PermissionService {
     public ResponseVO loadMenuTree() {
         //查询所有菜单
         List<Permission> permissionList = permissionMapper.selectAllPermission(null);
+        //根据角色id查询菜单
+
         //创建树形节点
         List<TreeNodeVO> treeNodes = new ArrayList<>();
         permissionList.forEach(item -> {
             //获取菜单是否展开
             boolean spread = null == item || 1 == item.getSpread();
             assert item != null;
-            treeNodes.add(TreeNodeVO.builder()
-                    .id(item.getId())
-                    .parentId(item.getParentId())
-                    .title(item.getTitle())
-                    .spread(spread)
-                    .build());
+            treeNodes.add(new TreeNodeVO(item.getId(), item.getParentId(), item.getTitle(), spread));
         });
         return ResponseUtils.success(treeNodes);
     }
@@ -185,5 +193,39 @@ public class PermissionServiceImpl implements PermissionService {
             }
         }
         return ResponseUtils.success(count);
+    }
+
+    @Override
+    public ResponseVO getMenuTree(Integer roleId) {
+        //查询所有菜单
+        List<Permission> permissionList = permissionMapper.selectAllPermission(null);
+        //根据角色id查询菜单
+        List<Integer> currentRolePermissionIds = rolePermissionMapper.selectPermissionByRoleId(roleId);
+
+        //创建集合保存菜单信息
+        List<Permission> currentPermissions = new ArrayList<>();
+        if (currentRolePermissionIds != null && currentRolePermissionIds.size() > 0) {
+            //如果角色权限列表中存在数据 则根据权限菜单id查询详情
+            currentPermissions = permissionMapper.selectPermissionByPids(currentRolePermissionIds);
+        }
+
+
+        //创建树形节点
+        List<TreeNodeVO> treeNodes = new ArrayList<>();
+        List<Permission> finalCurrentPermissions = currentPermissions;
+        permissionList.forEach(item -> {
+            AtomicReference<String> checkArr = new AtomicReference<>("0");
+            //标识权限复选框是否被选中 0-不选中 1-选中
+            finalCurrentPermissions.forEach(currentPermission -> {
+                if (item.getId().equals(currentPermission.getId())) {
+                    checkArr.set("1");
+                }
+            });
+            //获取菜单是否展开
+            boolean spread = null == item || 1 == item.getSpread();
+            assert item != null;
+            treeNodes.add(new TreeNodeVO(item.getId(), item.getParentId(), item.getTitle(), spread, checkArr.toString()));
+        });
+        return ResponseUtils.success(treeNodes);
     }
 }

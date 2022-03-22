@@ -5,5 +5,14 @@
         <id column="rid" property="rid" jdbcType="INTEGER"/>
         <result column="pid" property="pid" jdbcType="INTEGER"/>
     </resultMap>
+    <!--分配角色权限-->
+    <insert id="distributionRoleWithMenu">
+        INSERT INTO sys_role_permisson(rid, pid)
+        <trim prefix="VALUES" suffixOverrides=", ">
+            <foreach collection="menuIds" item="pid">
+                (#{rid},#{pid}),
+            </foreach>
+        </trim>
+    </insert>
 
 </mapper>

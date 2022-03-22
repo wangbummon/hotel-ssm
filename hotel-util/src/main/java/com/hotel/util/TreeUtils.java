@@ -21,7 +21,7 @@ public class TreeUtils {
      * @return
      */
     public static List<MenuNodeVO> toTree(List<MenuNodeVO> treeList, Integer pid) {
-        List<MenuNodeVO> list = new ArrayList<MenuNodeVO>();
+        List<MenuNodeVO> list = new ArrayList<>();
         for (MenuNodeVO parent : treeList) {
             //如果传入的父级菜单id与集合中某个菜单的父级菜单id相等则将此条数据作为父类传入获取子菜单的方法中
             if (pid.equals(parent.getParentId())) {

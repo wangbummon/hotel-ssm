@@ -14,6 +14,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/css/layui.css"
           media="all">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/public.css" media="all">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui_ext/dtree/dtree.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui_ext/dtree/font/dtreefont.css"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/zdy.css">
 </head>
 <body>
 <div class="layuimini-container">
@@ -145,14 +148,22 @@
             </form>
         </div>
 
+        <!-- 分配菜单的弹出层 开始 -->
+        <div style="display: none;margin: 10px 5px" id="selectRoleMenuDiv">
+            <ul id="roleTree" class="dtree" data-id="0" style="width: 350px"></ul>
+        </div>
+
     </div>
 </div>
 <script src="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>
-    layui.use(['jquery', 'form', 'table', 'layer'], function () {
+    layui.extend({
+        dtree: "${pageContext.request.contextPath}/static/layui_ext/dtree/dtree",
+    }).use(['jquery', 'form', 'table', 'layer', 'dtree'], function () {
         var $ = layui.jquery,
             form = layui.form,
             layer = layui.layer,
+            dtree = layui.dtree,
             table = layui.table;
 
         //获取<meta>中封装的CSRF Token
@@ -328,6 +339,9 @@
                 case 'delete':
                     deleteById(obj.data);
                     break;
+                case 'grantMenu':
+                    grantMenu(obj.data);
+                    break;
             }
         });
 
@@ -408,6 +422,69 @@
                             layer.close(index);
                         })
                     }
+                }
+            });
+        }
+
+        /**
+         * 打开分配权限窗口
+         */
+        function grantMenu(data) {
+            mainIndex = layer.open({
+                type: 1,
+                title: "分配 [<font color='red'>" + data.roleName + "</font>] 角色权限",
+                area: ["400px", "550px"],
+                content: $("#selectRoleMenuDiv"),
+                btn: ['<i class="layui-icon layui-icon-ok"> 确定</i>', '<i class="layui-icon layui-icon-close"> </i>取消'],
+                yes: function (index, layero) {
+                    //获取复选框选中的值
+                    let checked = dtree.getCheckbarNodesParam("roleTree");
+                    if (checked.length > 0) {
+                        layer.confirm("确定要分配这些菜单吗？", {icon: 3, title: "提示"}, function (inedx) {
+                            //保存选中值
+                            let idArr = [];
+                            for (let i = 0; i < checked.length; i++) {
+                                idArr.push(checked[i].nodeId);
+                            }
+                            //将数组转为字符串
+                            let ids = idArr.join(",");
+                            //发送请求保存选中菜单id
+                            $.ajax({
+                                url: "/admin/role/permission/" + data.id,
+                                type: "POST",
+                                data: JSON.stringify({"menuIds": ids, "rid": data.id}),
+                                dataType: 'json',
+                                contentType: 'application/json;charset=utf-8',
+                                success: function (result) {
+                                    layer.msg(result.msg)
+                                    //数据刷新
+                                    tableIns.reload();
+                                    //关闭当前窗口
+                                    layer.close(mainIndex);
+                                }
+                            });
+                            layer.close(index);
+                        });
+
+                    } else {
+                        layer.msg("请选择要分配的菜单！");
+                    }
+                },
+                btn2: function (index, layero) {
+
+                },
+                success: function () {
+                    dtree.render({
+                        elem: "#roleTree",
+                        url: "/admin/permissions/menuTree/" + data.id,
+                        dataStyle: "layuiStyle",
+                        dataFormat: "list",
+                        response: {message: "msg", statusCode: 0},
+                        checkbar: true,
+                        checkbarType: "no-all",
+                        skin: "zdy",
+                        width: 350
+                    });
                 }
             });
         }

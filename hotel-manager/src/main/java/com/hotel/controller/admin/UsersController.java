@@ -1,4 +1,4 @@
-package com.hotel.controller;
+package com.hotel.controller.admin;
 
 import com.hotel.pojo.po.UserRolePO;
 import com.hotel.pojo.po.UsersPO;

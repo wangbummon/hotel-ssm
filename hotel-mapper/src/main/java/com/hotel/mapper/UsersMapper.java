@@ -87,6 +87,6 @@ public interface UsersMapper {
      * @param username 用户名
      * @return
      */
-    @Select("SELECT id FROM sys_users WHERE username = #{username}")
-    int getUserIdByUsername(String username);
+    @Select("SELECT * FROM sys_users WHERE username = #{username}")
+    Users getUserIdByUsername(String username);
 }

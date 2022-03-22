@@ -299,7 +299,7 @@
             page: true,
             limit: 20,
             done: function (res, curr, count) {
-                if (curr > 1 && res.data.lenth === 0) {
+                if (curr > 1 && res.data.length === 0) {
                     tableIns:reload({
                         page: {curr: curr - 1}
                     });
@@ -540,7 +540,7 @@
                 content: $("#updateWindow"),
                 success: function () {
                     dtree.dataInit("editMenuTree", data.parentId);
-                    dtree.selectVal("editMenuTree")
+                    dtree.selectVal("editMenuTree");
                     if (data.parentId === 0) {
                         editMenuTree.reload();
                     }
@@ -553,7 +553,7 @@
                     $("#addIcon").val(data.icon);
 
                     //判断菜单地址是否为空 若为空则不显示
-                    if ($("#editHref").val() !== null && $("#editHref").val() !== '' && $("#editParentId").val() !== 0) {
+                    if ($("#editParentId").val() != 0) {
                         $("#editMenuHrefDiv").show();
                     } else {
                         $("#editMenuHrefDiv").hide();
@@ -594,7 +594,7 @@
 
 
         /**
-         * 删除用户
+         * 删除权限菜单
          * @param data
          */
         function deleteById(data) {

@@ -1,7 +1,10 @@
-package com.hotel.controller;
+package com.hotel.controller.admin;
 
 import com.hotel.pojo.po.RolePO;
+import com.hotel.pojo.po.RolePermissionPO;
+import com.hotel.pojo.po.UserRolePO;
 import com.hotel.pojo.vo.ResponseVO;
+import com.hotel.service.RolePermissionService;
 import com.hotel.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class RoleController {
 
     private final RoleService roleService;
+    private final RolePermissionService rolePermissionService;
 
     @ApiOperation("查询所有角色")
     @GetMapping("/roles")
@@ -49,7 +53,7 @@ public class RoleController {
 
     @ApiOperation("批量删除角色")
     @DeleteMapping("/roles/{ids}")
-    public ResponseVO removevRoles(@PathVariable String ids){
+    public ResponseVO removevRoles(@PathVariable String ids) {
         return roleService.removeRoles(ids);
     }
 
@@ -69,5 +73,17 @@ public class RoleController {
     @GetMapping("/roles/init/{id}")
     public ResponseVO initRoleData(@PathVariable Integer id) {
         return roleService.initRoleData(id);
+    }
+
+    @ApiOperation("初始化权限菜单")
+    @PostMapping("/roles/menu")
+    public ResponseVO initRoleMenu() {
+        return roleService.initRoleMenu();
+    }
+
+    @ApiOperation("分配角色菜单")
+    @PostMapping("role/permission/{rid}")
+    public ResponseVO distributionRoleWithMenu(@RequestBody RolePermissionPO params) {
+        return rolePermissionService.distributionRoleWithMenu(params);
     }
 }

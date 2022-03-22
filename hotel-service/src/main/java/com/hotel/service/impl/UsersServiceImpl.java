@@ -112,7 +112,7 @@ public class UsersServiceImpl implements UsersService {
         users.setCreatedDate(new Date());
         //通过用户名查询用户信息 并保存创建人id
         String username = request.getUserPrincipal().getName();
-        Integer userId = usersMapper.getUserIdByUsername(username);
+        Integer userId = usersMapper.getUserIdByUsername(username).getId();
         //设置创建人
         users.setCreatedUser(userId);
         //设置密文密码保存至数据库 这里指定所有用户初始密码均为123456
@@ -137,7 +137,7 @@ public class UsersServiceImpl implements UsersService {
         users.setModifyDate(new Date());
         //通过用户名获取用户信息 并保存修改人id
         String username = request.getUserPrincipal().getName();
-        Integer userId = usersMapper.getUserIdByUsername(username);
+        Integer userId = usersMapper.getUserIdByUsername(username).getId();
         users.setModifyUser(userId);
         return CheckUtils.checkSuccess(usersMapper.updateByPrimaryKey(users));
     }
@@ -165,7 +165,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public ResponseVO resetPwd(Integer id, HttpServletRequest request) {
         String username = request.getUserPrincipal().getName();
-        int userId = usersMapper.getUserIdByUsername(username);
+        int userId = usersMapper.getUserIdByUsername(username).getId();
         //将密码重置为加密后的默认密码 123456
         users = Users.builder()
                 .id(id)

@@ -139,11 +139,11 @@
             miniTongji = layui.miniTongji;
 
         var options = {
-            iniUrl: "${pageContext.request.contextPath}/admin/menu/getAllMenu",    // 初始化接口
+            iniUrl: "${pageContext.request.contextPath}/admin/menu/getMenuByUser",    // 初始化接口
             clearUrl: "${pageContext.request.contextPath}/static/layui/api/clear.json", // 缓存清理接口
             urlHashLocation: true,      // 是否打开hash定位
             bgColorDefault: false,      // 主题默认配置
-            multiModule: false,          // 是否开启多模块
+            multiModule: true,          // 是否开启多模块
             menuChildOpen: false,       // 是否默认展开菜单
             loadingTime: 0,             // 初始化加载时间
             pageAnim: true,             // iframe窗口动画

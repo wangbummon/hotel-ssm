@@ -1,12 +1,15 @@
 package com.hotel.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.hotel.mapper.PermissionMapper;
 import com.hotel.mapper.RoleMapper;
 import com.hotel.mapper.UserRoleMapper;
+import com.hotel.pojo.entity.Permission;
 import com.hotel.pojo.entity.Role;
 import com.hotel.pojo.po.RolePO;
 import com.hotel.pojo.vo.ResponseVO;
 import com.hotel.pojo.vo.RoleVO;
+import com.hotel.pojo.vo.TreeNodeVO;
 import com.hotel.service.RoleService;
 import com.hotel.util.CheckUtils;
 import com.hotel.util.MyBeanUtils;
@@ -15,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,7 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;
     private final UserRoleMapper userRoleMapper;
+    private final PermissionMapper permissionMapper;
 
     private Role role = null;
 
@@ -161,5 +166,25 @@ public class RoleServiceImpl implements RoleService {
         List roleIds = Arrays.asList(ids.split(","));
         boolean remove = roleMapper.removeRoles(roleIds);
         return CheckUtils.checkSuccess(remove);
+    }
+
+    /**
+     * 初始化权限菜单
+     *
+     * @return
+     */
+    @Override
+    public ResponseVO initRoleMenu() {
+        //查询所有菜单
+        List<Permission> permissionList = permissionMapper.selectAllPermission(null);
+        //创建树形节点
+        List<TreeNodeVO> treeNodes = new ArrayList<>();
+        permissionList.forEach(item -> {
+            //获取菜单是否展开
+            boolean spread = null == item || 1 == item.getSpread();
+            assert item != null;
+            treeNodes.add(new TreeNodeVO(item.getId(), item.getParentId(), item.getTitle(), spread));
+        });
+        return ResponseUtils.success(treeNodes);
     }
 }

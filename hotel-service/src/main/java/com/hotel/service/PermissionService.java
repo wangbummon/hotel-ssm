@@ -4,6 +4,8 @@ import com.hotel.pojo.po.PermissionPO;
 import com.hotel.pojo.vo.PermissionVO;
 import com.hotel.pojo.vo.ResponseVO;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author az
  * @description
@@ -15,9 +17,10 @@ public interface PermissionService {
      * 查询所有菜单
      *
      * @param params 菜单PO
+     * @param request
      * @return
      */
-    String selectAllPermission(PermissionPO params);
+    String selectAllPermission(PermissionPO params, HttpServletRequest request);
 
     /**
      * 初始化权限的菜单树
@@ -65,4 +68,11 @@ public interface PermissionService {
      * @return
      */
     ResponseVO checkPermissionChildCount(Integer id);
+
+    /**
+     * 根据角色id获取菜单树
+     * @param roleId 角色id
+     * @return
+     */
+    ResponseVO getMenuTree(Integer roleId);
 }

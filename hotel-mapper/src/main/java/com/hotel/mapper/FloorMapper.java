@@ -1,16 +1,55 @@
 package com.hotel.mapper;
 
 import com.hotel.pojo.entity.Floor;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 public interface FloorMapper {
-    int deleteByPrimaryKey(Integer id);
+    /**
+     * 根据id删除楼层
+     *
+     * @param id 楼层id
+     * @return
+     */
+    boolean deleteByPrimaryKey(@Param("id") Integer id);
 
-    int insert(Floor record);
+    /**
+     * 新增楼层
+     *
+     * @param record 楼层实体
+     * @return
+     */
+    boolean insert(Floor record);
 
-    Floor selectByPrimaryKey(Integer id);
+    /**
+     * 根据id查询详情
+     *
+     * @param id 楼层id
+     * @return
+     */
+    Floor selectByPrimaryKey(@Param("id") Integer id);
 
+    /**
+     * 获取所有楼层
+     *
+     * @return
+     */
     List<Floor> selectAll();
 
-    int updateByPrimaryKey(Floor record);
+    /**
+     * 根据id修改楼层信息
+     *
+     * @param record 楼层实体
+     * @return
+     */
+    boolean updateByPrimaryKey(Floor record);
+
+    /**
+     * 查询楼层列表
+     *
+     * @param floor 楼层实体类
+     * @return
+     */
+    List<Floor> selectFloorList(Floor floor);
 }

@@ -60,4 +60,19 @@ public interface PermissionMapper {
      */
     @Select("SELECT id, parent_id, type, title, permission_code, icon, href, spread, target FROM sys_permission WHERE id = #{id}")
     Permission selectPermissionById(@Param("id") Integer id);
+
+    /**
+     * 根据用户id查询权限菜单
+     * @param id 用户id
+     * @return
+     */
+    List<Permission> selectPermissionByUser(@Param("userId") Integer id);
+
+    /**
+     * 根据权限id列表查询权限菜单详情
+     * @param currentRolePermissionIds 权限id集合
+     * @return
+     */
+    List<Permission> selectPermissionByPids(@Param("currentRolePermissionIds") List<Integer> currentRolePermissionIds);
+
 }

@@ -1,4 +1,4 @@
-package com.hotel.controller;
+package com.hotel.controller.admin;
 
 import com.hotel.pojo.po.PermissionPO;
 import com.hotel.pojo.vo.ResponseVO;
@@ -25,6 +25,12 @@ public class PermissionController {
     @PostMapping("/permissions/menuTree")
     public ResponseVO loadMenuTree() {
         return permissionService.loadMenuTree();
+    }
+
+    @ApiOperation("渲染权限管理的菜单树")
+    @RequestMapping("/permissions/menuTree/{roleId}")
+    public ResponseVO getMenuTree(@PathVariable Integer roleId) {
+        return permissionService.getMenuTree(roleId);
     }
 
     @ApiOperation("查询权限菜单列表")

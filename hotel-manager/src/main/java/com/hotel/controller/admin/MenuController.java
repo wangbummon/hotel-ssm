@@ -1,4 +1,4 @@
-package com.hotel.controller;
+package com.hotel.controller.admin;
 
 import com.hotel.pojo.po.PermissionPO;
 import com.hotel.service.PermissionService;
@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author az
@@ -22,10 +24,10 @@ public class MenuController {
 
     private final PermissionService permissionService;
 
-    @ApiOperation("获取所有菜单(左侧导航栏)")
-    @GetMapping("/getAllMenu")
-    public String getAllMenu(PermissionPO params){
-        return permissionService.selectAllPermission(params);
+    @ApiOperation("根据登录用户权限获取左侧导航栏")
+    @GetMapping("/getMenuByUser")
+    public String getAllMenu(PermissionPO params, HttpServletRequest request){
+        return permissionService.selectAllPermission(params,request);
     }
 
 }
