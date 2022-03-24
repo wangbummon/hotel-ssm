@@ -33,10 +33,10 @@
             <if test="permissionCode!=null and permissionCode!=''">
                 permission_code = #{permissionCode},
             </if>
-            <if test="icon!=null and icon!=''">
+            <if test="icon!=null">
                 icon = #{icon},
             </if>
-            <if test="href!=null and href!=''">
+            <if test="href!=null">
                 href = #{href},
             </if>
             <if test="spread!=null">

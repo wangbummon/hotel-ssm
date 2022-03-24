@@ -263,7 +263,6 @@
                 success: function () {
                     //表单数据回显
                     form.val("updateFrm", data);
-                    console.log(data)
                 }
             });
         }
@@ -272,7 +271,6 @@
          * 监听修改提交事件
          */
         form.on('submit(doEdit)', function (data) {
-            console.log(data.field)
             $.ajax({
                 url: "/admin/floors/" + data.field.id,
                 type: "PUT",

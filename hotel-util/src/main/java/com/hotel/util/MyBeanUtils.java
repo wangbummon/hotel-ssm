@@ -19,7 +19,7 @@ public class MyBeanUtils {
      * @param source 源类
      * @param target 目标类
      */
-    public static void copyProperties(Object source, Object target) {
+    public static <E, T> void copyProperties(E source, T target) {
         try {
             BeanUtils.copyProperties(source, target);
         } catch (Exception e) {
@@ -47,5 +47,7 @@ public class MyBeanUtils {
             });
         }
     }
+
+
 
 }

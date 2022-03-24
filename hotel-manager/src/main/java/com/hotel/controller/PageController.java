@@ -1,4 +1,4 @@
-package com.hotel.controller.admin;
+package com.hotel.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +23,7 @@ public class PageController {
     @ApiOperation("跳转至部门管理页面")
     @RequestMapping("/deptManager")
     public String deptManager() {
-        return "admin/deptManager";
+        return "deptManager";
     }
 
     /**
@@ -34,7 +34,7 @@ public class PageController {
     @ApiOperation("跳转至角色管理页面")
     @RequestMapping("/roleManager")
     public String roleManager() {
-        return "admin/roleManager";
+        return "roleManager";
     }
 
     /**
@@ -45,18 +45,45 @@ public class PageController {
     @ApiOperation("跳转至用户管理页面")
     @RequestMapping("/usersManager")
     public String usersManager() {
-        return "admin/usersManager";
+        return "usersManager";
     }
 
+    /**
+     * 权限管理页面
+     *
+     * @return
+     */
     @ApiOperation("跳转至权限管理页面")
     @RequestMapping("/permissionManager")
     public String permissionManager() {
-        return "admin/permissionManager";
+        return "permissionManager";
     }
 
+    /**
+     * 楼层管理页面
+     *
+     * @return
+     */
     @ApiOperation("跳转至楼层管理页面")
     @RequestMapping("/floorManager")
     public String floorManager() {
-        return "admin/floorManager";
+        return "floorManager";
+    }
+
+    /**
+     * 房型管理页面
+     *
+     * @return
+     */
+    @ApiOperation("跳转至房型管理页面")
+    @RequestMapping("/roomTypeManager")
+    public String roomTypeManager() {
+        return "roomTypeManager";
+    }
+
+    @ApiOperation("跳转至房间管理页码")
+    @RequestMapping("/roomManager")
+    public String roomManager() {
+        return "roomManager";
     }
 }

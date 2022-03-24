@@ -1,4 +1,4 @@
-package com.hotel.controller.admin;
+package com.hotel.controller;
 
 import com.hotel.pojo.po.FloorPO;
 import com.hotel.pojo.vo.ResponseVO;
@@ -43,5 +43,11 @@ public class FloorController {
     @DeleteMapping("/floors/{id}")
     public ResponseVO removeFloorById(@PathVariable Integer id){
         return floorService.removeFloors(id);
+    }
+
+    @ApiOperation("查询所有楼层")
+    @GetMapping("/floors/all")
+    public String getAllFloors(){
+        return floorService.getAllFloors();
     }
 }

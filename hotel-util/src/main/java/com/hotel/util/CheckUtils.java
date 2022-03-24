@@ -20,15 +20,14 @@ public class CheckUtils {
      * @param listClass 转换类的class
      * @return
      */
-    public static <E, T> ResponseVO checkEmpty(List<E> sources, Class<T> listClass) {
+    public static <E, T> ResponseVO checkEmpty(Long total, List<E> sources, Class<T> listClass) {
         List<T> targetList = new ArrayList<>();
         //将源集合转换为VO集合
         MyBeanUtils.convertList2List(sources, targetList, listClass);
-        PageInfo<T> pageInfo = new PageInfo<>(targetList);
-        if (targetList.isEmpty() || pageInfo.getTotal() <= 0) {
+        if (targetList.isEmpty() || total <= 0) {
             return ResponseUtils.empty();
         }
-        return ResponseUtils.success(pageInfo.getTotal(), pageInfo.getList());
+        return ResponseUtils.success(total, targetList);
     }
 
     /**

@@ -1,12 +1,17 @@
+import com.hotel.pojo.entity.Floor;
 import com.hotel.pojo.entity.Permission;
+import com.hotel.pojo.entity.Role;
+import com.hotel.pojo.po.FloorPO;
+import com.hotel.pojo.po.RolePO;
 import com.hotel.pojo.vo.MenuNodeVO;
+import com.hotel.pojo.vo.RoleVO;
 import com.hotel.util.MyBeanUtils;
+import com.hotel.util.UUIDUtils;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -18,11 +23,14 @@ import java.util.stream.Collectors;
 public class Tests {
 
     @Test
-    public void test1() {
-        assert true;
-        System.out.println("成功assert");
-        //assert false:"报错咯";
-        //System.out.println("assert2执行成功！");
+    public void test1() throws IOException {
+        String oldName = "1.txt";
+        //获取文件后缀名.
+        String extension = Objects.requireNonNull(oldName).substring(oldName.lastIndexOf("."));
 
+        String newName = UUIDUtils.randomUUID() + extension;
+        System.out.println(newName);
     }
+
+
 }

@@ -375,7 +375,6 @@
                 },
                 {
                     field: 'status', title: '状态', width: 150, align: "center", templet: function (data) {
-                        console.log(data.status)
                         if (data.status === 1) {
                             return '<div> <input type="checkbox" checked="" name="status" lay-skin="switch" id="open" lay-filter="statusSwitch" userId=' + data.id + '' +
                                 ' lay-text="启用|已禁用"  value=' + data.status + '></div>';
@@ -388,7 +387,6 @@
                 {title: '操作', minWidth: 200, toolbar: '#currentTableBar', align: "center"}
             ]],
             page: true,
-            limit: 20,
             done: function (res, curr, count) {
                 if (curr > 1 && res.data.lenth === 0) {
                     tableIns:reload({
@@ -442,13 +440,12 @@
 
         //发送请求查询部门列表 渲染搜索框中的部门列表
         $.ajax({
-            url: "/admin/allDepts",
+            url: "/admin/depts/all",
             type: "GET",
             data: {},
             success: function (result) {
                 let html = "",
                     data = JSON.parse(result);
-                // console.log(data);
                 for (let i = 0; i < data.length; i++) {
                     html += "<option value='" + data[i].id + "'>" + data[i].deptName + "</option>";
                 }
@@ -487,7 +484,6 @@
                     idArr.push(checkStatus.data[i].id);
                     ids = idArr.join(",");
                 }
-                console.log(ids)
                 layer.confirm("确定要删除所选用户吗？", {
                     icon: 3,
                     title: "提示"
@@ -589,7 +585,6 @@
                 success: function () {
                     //表单数据回显
                     form.val("updateFrm", data);
-                    console.log(data)
                 }
             });
         }

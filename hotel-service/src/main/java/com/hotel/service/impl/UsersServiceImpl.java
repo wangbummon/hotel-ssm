@@ -1,6 +1,7 @@
 package com.hotel.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hotel.mapper.UserRoleMapper;
 import com.hotel.mapper.UsersMapper;
 import com.hotel.pojo.entity.Role;
@@ -39,8 +40,6 @@ public class UsersServiceImpl implements UsersService {
 
     private final UsersMapper usersMapper;
     private final UserRoleMapper userRoleMapper;
-
-    private Users users = new Users();
 
     /**
      * spring security按照用户名加载用户 此处不会传入用户的密码
@@ -95,7 +94,8 @@ public class UsersServiceImpl implements UsersService {
         }
         PageHelper.startPage(params.getPageNum(), params.getPageSize());
         List<Users> usersList = usersMapper.getUserList(params);
-        return CheckUtils.checkEmpty(usersList, UsersVO.class);
+        PageInfo<Users> pageInfo = new PageInfo<>(usersList);
+        return CheckUtils.checkEmpty(pageInfo.getTotal(), pageInfo.getList(), UsersVO.class);
     }
 
     /**
@@ -107,7 +107,7 @@ public class UsersServiceImpl implements UsersService {
      */
     @Override
     public ResponseVO addUser(UsersPO params, HttpServletRequest request) {
-        users = new Users();
+        Users users = new Users();
         MyBeanUtils.copyProperties(params, users);
         users.setCreatedDate(new Date());
         //通过用户名查询用户信息 并保存创建人id
@@ -132,7 +132,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public ResponseVO modifyUsers(UsersPO params, HttpServletRequest request) {
-        users = new Users();
+        Users users = new Users();
         MyBeanUtils.copyProperties(params, users);
         users.setModifyDate(new Date());
         //通过用户名获取用户信息 并保存修改人id
@@ -167,7 +167,7 @@ public class UsersServiceImpl implements UsersService {
         String username = request.getUserPrincipal().getName();
         int userId = usersMapper.getUserIdByUsername(username).getId();
         //将密码重置为加密后的默认密码 123456
-        users = Users.builder()
+        Users users = Users.builder()
                 .id(id)
                 .password(PasswordUtils.encode(DataEnums.DEFAULT_PASSWORD.getData()))
                 .modifyUser(userId)

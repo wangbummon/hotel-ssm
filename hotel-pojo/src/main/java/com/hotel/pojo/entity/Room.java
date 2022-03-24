@@ -69,5 +69,18 @@ public class Room {
     /**
      * 房间描述
      */
+    @ApiModelProperty("房间描述")
     private String roomDesc;
+
+    /**
+     * 楼层实体
+     */
+    @ApiModelProperty("楼层实体")
+    private Floor floor;
+
+    /**
+     * 房型实体
+     */
+    @ApiModelProperty("房型实体")
+    private RoomType roomType;
 }

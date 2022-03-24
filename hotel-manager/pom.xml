@@ -14,7 +14,7 @@
     <artifactId>hotel-manager</artifactId>
     <version>1.0.0</version>
 
-    <description>实现层及前端文件存放</description>
+    <description>后台控制层及前端文件存放</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

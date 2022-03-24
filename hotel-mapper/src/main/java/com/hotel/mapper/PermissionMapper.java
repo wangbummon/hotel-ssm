@@ -18,7 +18,7 @@ public interface PermissionMapper {
      * @param params 菜单PO类
      * @return
      */
-    List<Permission> selectAllPermission(PermissionPO params);
+    List<Permission> selectAllPermission(Permission params);
 
     /**
      * 根据id修改权限菜单详情

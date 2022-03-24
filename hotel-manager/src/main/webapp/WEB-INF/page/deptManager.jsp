@@ -180,7 +180,6 @@
                 {title: '操作', width: 150, toolbar: '#currentTableBar', align: "center", align: "center"}
             ]],
             page: true,
-            limit: 20,
             done: function (res, curr, count) {
                 if (curr > 1 && res.data.lenth === 0) {
                     tableIns:reload({
@@ -274,9 +273,8 @@
                     idArr.push(checkStatus.data[i].id);
                     ids = idArr.join(",");
                 }
-                console.log(ids)
                 $.ajax({
-                    url: "/admin/dept-user",
+                    url: "/admin/dept/user",
                     type: "GET",
                     data: {"ids": ids},
                     success: function (result) {
@@ -374,7 +372,7 @@
          */
         function deleteById(data) {
             $.ajax({
-                url: "/admin/dept-user/" + data.id,
+                url: "/admin/dept/user/" + data.id,
                 type: "GET",
                 data: {"deptId": data.id},
                 success: function (result) {

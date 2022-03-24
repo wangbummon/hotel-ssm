@@ -10,7 +10,16 @@ public enum RedisKeyEnums {
     /**
      * redis中保存部门列表的key
      */
-    DEPT_LIST("dept_list");
+    DEPT_LIST("dept_list"),
+    /**
+     * redis中保存楼层列表的key
+     */
+    FLOOR_LIST("floor_list"),
+
+    /**
+     * redis中保存房型列表的key
+     */
+    ROOM_TYPE_LIST("room_type_list");
 
     private String key;
 

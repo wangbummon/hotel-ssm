@@ -2,6 +2,7 @@ package com.hotel.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hotel.mapper.PermissionMapper;
 import com.hotel.mapper.RolePermissionMapper;
 import com.hotel.mapper.UsersMapper;
@@ -43,7 +44,6 @@ public class PermissionServiceImpl implements PermissionService {
     private final UsersMapper usersMapper;
     private final RolePermissionMapper rolePermissionMapper;
 
-    private Permission permission = new Permission();
 
     /**
      * 查询所有菜单
@@ -119,9 +119,12 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public ResponseVO getPermissions(PermissionPO params) {
+        Permission permission = new Permission();
+        MyBeanUtils.copyProperties(params, permission);
         PageHelper.startPage(params.getPageNum(), params.getPageSize());
-        List<Permission> permissions = permissionMapper.selectAllPermission(params);
-        return CheckUtils.checkEmpty(permissions, PermissionVO.class);
+        List<Permission> permissions = permissionMapper.selectAllPermission(permission);
+        PageInfo<Permission> pageInfo = new PageInfo<>(permissions);
+        return CheckUtils.checkEmpty(pageInfo.getTotal(), pageInfo.getList(), PermissionVO.class);
     }
 
     /**
@@ -132,8 +135,10 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public ResponseVO modifyPermissionById(PermissionPO params) {
-        permission = new Permission();
+        Permission permission = new Permission();
         MyBeanUtils.copyProperties(params, permission);
+        //设置打开方式
+        permission.setTarget("_self");
         boolean modify = permissionMapper.modifyPermissionById(permission);
         return CheckUtils.checkSuccess(modify);
     }
@@ -146,7 +151,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public ResponseVO insertPermission(PermissionPO params) {
-        permission = new Permission();
+        Permission permission = new Permission();
         MyBeanUtils.copyProperties(params, permission);
         //如果为空则表示用户未选中父级菜单 表示此菜单为父级菜单
         if (permission.getParentId() == null) {

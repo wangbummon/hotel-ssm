@@ -1,4 +1,4 @@
-package com.hotel.controller.admin;
+package com.hotel.controller;
 
 import com.hotel.pojo.vo.ResponseVO;
 import com.hotel.service.UsersService;

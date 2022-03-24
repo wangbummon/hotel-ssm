@@ -1,6 +1,7 @@
 package com.hotel.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hotel.mapper.PermissionMapper;
 import com.hotel.mapper.RoleMapper;
 import com.hotel.mapper.UserRoleMapper;
@@ -37,7 +38,6 @@ public class RoleServiceImpl implements RoleService {
     private final UserRoleMapper userRoleMapper;
     private final PermissionMapper permissionMapper;
 
-    private Role role = null;
 
     /**
      * 查询角色
@@ -47,11 +47,12 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public ResponseVO getRole(RolePO params) {
-        role = new Role();
+        Role role = new Role();
         MyBeanUtils.copyProperties(params, role);
         PageHelper.startPage(params.getPageNum(), params.getPageSize());
         List<Role> roles = roleMapper.selectRole(role);
-        return CheckUtils.checkEmpty(roles, RoleVO.class);
+        PageInfo<Role> pageInfo = new PageInfo<>(roles);
+        return CheckUtils.checkEmpty(pageInfo.getTotal(),pageInfo.getList(), RoleVO.class);
     }
 
     /**
@@ -62,7 +63,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public ResponseVO addRole(RolePO params) {
-        role = new Role();
+        Role role = new Role();
         MyBeanUtils.copyProperties(params, role);
         role.setRoleCode(role.getRoleCode().toUpperCase());
         if (!role.getRoleCode().startsWith("ROLE_")) {
@@ -79,7 +80,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public ResponseVO modifyRole(RolePO params) {
-        role = new Role();
+        Role role = new Role();
         MyBeanUtils.copyProperties(params, role);
         return CheckUtils.checkSuccess(roleMapper.updateByPrimaryKey(role));
     }

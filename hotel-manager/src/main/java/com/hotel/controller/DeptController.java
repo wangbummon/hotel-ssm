@@ -1,4 +1,4 @@
-package com.hotel.controller.admin;
+package com.hotel.controller;
 
 import com.hotel.pojo.po.DeptPO;
 import com.hotel.pojo.vo.ResponseVO;
@@ -51,19 +51,19 @@ public class DeptController {
     }
 
     @ApiOperation("查询部门下用户数量")
-    @GetMapping("/dept-user/{deptId}")
+    @GetMapping("/dept/user/{deptId}")
     public ResponseVO getDeptUserCount(@PathVariable Integer deptId) {
         return deptService.getDeptUserCount(deptId);
     }
 
     @ApiOperation("查询多选部门下是否有用户")
-    @GetMapping("/dept-user")
+    @GetMapping("/dept/user")
     public ResponseVO getDeptsUserCount(@RequestParam String ids){
         return deptService.getDeptsUserCount(ids);
     }
 
     @ApiOperation("查询所有部门")
-    @GetMapping("/allDepts")
+    @GetMapping("/depts/all")
     public String allDepts(){
         return deptService.selectAllDepts();
     }

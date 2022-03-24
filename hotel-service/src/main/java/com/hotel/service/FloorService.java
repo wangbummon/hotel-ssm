@@ -12,6 +12,7 @@ public interface FloorService {
 
     /**
      * 获取楼层列表
+     *
      * @param params 楼层PO
      * @return
      */
@@ -19,6 +20,7 @@ public interface FloorService {
 
     /**
      * 新增楼层
+     *
      * @param params 楼层PO
      * @return
      */
@@ -26,6 +28,7 @@ public interface FloorService {
 
     /**
      * 修改楼层信息
+     *
      * @param params 楼层PO
      * @return
      */
@@ -33,8 +36,17 @@ public interface FloorService {
 
     /**
      * 根据id删除楼层
+     *
      * @param id 楼层id
      * @return
      */
     ResponseVO removeFloors(Integer id);
+
+    /**
+     * redis获取所有楼层
+     *
+     * @return
+     */
+    String getAllFloors();
+
 }

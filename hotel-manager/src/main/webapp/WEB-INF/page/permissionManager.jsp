@@ -297,7 +297,6 @@
                 {title: '操作', minWidth: 150, toolbar: '#currentTableBar', align: "center"}
             ]],
             page: true,
-            limit: 20,
             done: function (res, curr, count) {
                 if (curr > 1 && res.data.length === 0) {
                     tableIns:reload({
@@ -566,7 +565,6 @@
          * 监听修改提交事件
          */
         form.on('submit(doEdit)', function (data) {
-            console.log(data.field)
             $.ajax({
                 url: "/admin/permissions/" + data.field.id,
                 type: "PUT",

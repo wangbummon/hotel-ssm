@@ -1,54 +1,154 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hotel.mapper.RoomMapper" >
-  <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Room" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="title" property="title" jdbcType="VARCHAR" />
-    <result column="photo" property="photo" jdbcType="VARCHAR" />
-    <result column="room_num" property="roomNum" jdbcType="VARCHAR" />
-    <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER" />
-    <result column="floor_id" property="floorId" jdbcType="INTEGER" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="room_requirement" property="roomRequirement" jdbcType="VARCHAR" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="room_desc" property="roomDesc" jdbcType="LONGVARCHAR" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_room
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="com.hotel.pojo.entity.Room" >
-    insert into t_room (id, title, photo, 
-      room_num, room_type_id, floor_id, 
-      status, room_requirement, remark, 
-      room_desc)
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR}, 
-      #{roomNum,jdbcType=VARCHAR}, #{roomTypeId,jdbcType=INTEGER}, #{floorId,jdbcType=INTEGER}, 
-      #{status,jdbcType=INTEGER}, #{roomRequirement,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
-      #{roomDesc,jdbcType=LONGVARCHAR})
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Room" >
-    update t_room
-    set title = #{title,jdbcType=VARCHAR},
-      photo = #{photo,jdbcType=VARCHAR},
-      room_num = #{roomNum,jdbcType=VARCHAR},
-      room_type_id = #{roomTypeId,jdbcType=INTEGER},
-      floor_id = #{floorId,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
-      room_requirement = #{roomRequirement,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR},
-      room_desc = #{roomDesc,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select id, title, photo, room_num, room_type_id, floor_id, status, room_requirement, 
-    remark, room_desc
-    from t_room
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select id, title, photo, room_num, room_type_id, floor_id, status, room_requirement, 
-    remark, room_desc
-    from t_room
-  </select>
+<mapper namespace="com.hotel.mapper.RoomMapper">
+    <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Room">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="photo" property="photo" jdbcType="VARCHAR"/>
+        <result column="room_num" property="roomNum" jdbcType="VARCHAR"/>
+        <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER"/>
+        <result column="floor_id" property="floorId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="room_requirement" property="roomRequirement" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="room_desc" property="roomDesc" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+
+    <!-- 配置房间关联关系 -->
+    <resultMap id="RoomResultMap" type="com.hotel.pojo.entity.Room" extends="BaseResultMap">
+        <!--房型-->
+        <association property="roomType" javaType="com.hotel.pojo.entity.RoomType">
+            <id column="id" property="id" jdbcType="INTEGER"/>
+            <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+            <result column="photo" property="photo" jdbcType="VARCHAR"/>
+            <result column="price" property="price" jdbcType="DECIMAL"/>
+            <result column="roomNumber" property="roomNum"/>
+        </association>
+        <!--楼层-->
+        <association property="floor" javaType="com.hotel.pojo.entity.Floor">
+            <id column="id" property="id" jdbcType="INTEGER"/>
+            <result column="floor_name" property="floorName" jdbcType="VARCHAR"/>
+            <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        </association>
+    </resultMap>
+
+    <!--删除房间-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE
+        FROM t_room
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <!--新增房间-->
+    <insert id="insert" parameterType="com.hotel.pojo.entity.Room">
+        INSERT INTO t_room (id, title, photo,
+                            room_num, room_type_id, floor_id,
+                            `status`, room_requirement, remark,
+                            room_desc)
+        VALUES (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{photo,jdbcType=VARCHAR},
+                #{roomNum,jdbcType=VARCHAR}, #{roomTypeId,jdbcType=INTEGER}, #{floorId,jdbcType=INTEGER},
+                #{status,jdbcType=INTEGER}, #{roomRequirement,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+                #{roomDesc,jdbcType=LONGVARCHAR})
+    </insert>
+
+    <!--修改房间信息-->
+    <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Room">
+        UPDATE t_room
+        <set>
+            <if test="title!=null and title!=''">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="photo!=null and photo!=''">
+                photo = #{photo,jdbcType=VARCHAR},
+            </if>
+            <if test="roomNum!=null and roomNum!=''">
+                room_num = #{roomNum,jdbcType=VARCHAR},
+            </if>
+            <if test="roomTypeId!=null">
+                room_type_id = #{roomTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="floorId!=null">
+                floor_id = #{floorId,jdbcType=INTEGER},
+            </if>
+            <if test="status!=null">
+                `status` = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="roomRequirement!=null and roomRequirement!=''">
+                room_requirement = #{roomRequirement,jdbcType=VARCHAR},
+            </if>
+            <if test="remark!=null and remark!=''">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="roomDesc!=null and roomDesc!=''">
+                room_desc = #{roomDesc,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <!--查询所有房间-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT id,
+               title,
+               photo,
+               room_num,
+               room_type_id,
+               floor_id,
+               `status`,
+               room_requirement,
+               remark,
+               room_desc
+        FROM t_room
+        WHERE id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--查询房间列表-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT id,
+               title,
+               photo,
+               room_num,
+               room_type_id,
+               floor_id,
+               `status`,
+               room_requirement,
+               remark,
+               room_desc
+        FROM t_room
+    </select>
+    <select id="getRoomList" resultMap="RoomResultMap">
+        SELECT r.id,
+        r.title,
+        r.photo,
+        r.room_num,
+        r.room_type_id,
+        r.floor_id,
+        r.`status`,
+        r.room_requirement,
+        r.remark,
+        r.room_desc,
+        rt.type_name,
+        rt.room_num as roomNumber,
+        f.floor_name
+        FROM t_room r
+        INNER JOIN t_room_type rt ON r.room_type_id = rt.id
+        INNER JOIN t_floor f ON r.floor_id = f.id
+        <where>
+            <if test="title!=null and title!=''">
+                AND r.title LIKE CONCAT('%',#{title},'%')
+            </if>
+            <if test="roomNum!=null and roomNum!=''">
+                AND r.room_num LIKE CONCAT('%',#{roomNum},'%')
+            </if>
+            <if test="roomTypeId!=null">
+                AND r.room_type_id = #{roomTypeId}
+            </if>
+            <if test="floorId!=null">
+                AND r.floor_id = #{floorId}
+            </if>
+            <if test="status!=null">
+                AND r.status = #{status}
+            </if>
+        </where>
+    </select>
 </mapper>

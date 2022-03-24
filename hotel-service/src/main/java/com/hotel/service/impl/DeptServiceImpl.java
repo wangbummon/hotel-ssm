@@ -2,6 +2,7 @@ package com.hotel.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.hotel.mapper.DeptMapper;
 import com.hotel.mapper.UsersMapper;
 import com.hotel.pojo.entity.Dept;
@@ -34,8 +35,6 @@ public class DeptServiceImpl implements DeptService {
     private final DeptMapper deptMapper;
     private final UsersMapper usersMapper;
 
-    private Dept dept = null;
-
     /**
      * 查询所部门
      *
@@ -44,11 +43,12 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public ResponseVO selectDepts(DeptPO params) {
-        dept = new Dept();
+        Dept dept = new Dept();
         MyBeanUtils.copyProperties(params, dept);
         PageHelper.startPage(params.getPageNum(), params.getPageSize());
         List<Dept> depts = deptMapper.selectAll(dept);
-        return CheckUtils.checkEmpty(depts, DeptVO.class);
+        PageInfo<Dept> pageInfo = new PageInfo<>(depts);
+        return CheckUtils.checkEmpty(pageInfo.getTotal(), pageInfo.getList(), DeptVO.class);
     }
 
     /**
@@ -59,7 +59,7 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public ResponseVO insertDept(DeptPO params) {
-        dept = new Dept();
+        Dept dept = new Dept();
         MyBeanUtils.copyProperties(params, dept);
         dept.setCreateDate(new Date());
         boolean insert = deptMapper.insert(dept);
@@ -78,7 +78,7 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public ResponseVO modifyDept(DeptPO params) {
-        dept = new Dept();
+        Dept dept = new Dept();
         MyBeanUtils.copyProperties(params, dept);
         boolean update = deptMapper.updateByPrimaryKey(dept);
         if (update) {
