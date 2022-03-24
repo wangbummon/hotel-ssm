@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/security
+http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <!-- 设置静态资源匿名访问 -->
+    <security:http pattern="/static/**" security="none"/>
+
+    <!-- 执行失败后跳转的地址 -->
+    <security:http pattern="/failure.html" security="none"/>
+    <security:http pattern="/403.html" security="none"/>
+    <!-- web项目icon图标 -->
+    <security:http pattern="/static/images/favicon.ico" security="none"/>
+
+    <security:http auto-config="true" use-expressions="true">
+        <!-- 让登录页面可以匿名访问（无需进行拦截操作） -->
+        <security:intercept-url pattern="/login.jsp" access="permitAll()"/>
+        <!-- 定义过滤规则 -->
+        <!--<security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')"/>-->
+        <!-- 配置自定义登录认证页面 -->
+        <security:form-login
+                login-page="/login.jsp"
+                login-processing-url="/login"
+                default-target-url="/index.jsp"
+                authentication-failure-url="/login.jsp"
+                username-parameter="loginName"
+                password-parameter="password"
+        />
+
+        <!-- 防止点击劫持攻击 -->
+        <!-- 启用后，将X-Frame-Options标头添加到响应中，这使较新的浏览器可以进行一些安全检查并防止点击劫持攻击 -->
+        <!--<security:headers>-->
+        <!--    <security:frame-options policy="SAMEORIGIN"/>-->
+        <!--</security:headers>-->
+
+
+        <!--403异常处理-->
+        <security:access-denied-handler error-page="/403.html"/>
+    </security:http>
+
+    <!-- 注入密码加密类 -->
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="accountServiceImpl">
+            <!-- 注入密码加密类 -->
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>

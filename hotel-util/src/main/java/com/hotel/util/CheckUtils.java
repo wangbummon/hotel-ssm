@@ -1,7 +1,9 @@
 package com.hotel.util;
 
 import com.github.pagehelper.PageInfo;
+import com.hotel.pojo.enums.RedisKeyEnums;
 import com.hotel.pojo.vo.ResponseVO;
+import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,5 +43,12 @@ public class CheckUtils {
             return ResponseUtils.success();
         }
         return ResponseUtils.failed();
+    }
+
+    public static ResponseVO checkSuccess(boolean result, String msg) {
+        if (result) {
+            return ResponseUtils.success(msg + "成功");
+        }
+        return ResponseUtils.failed(msg + "失败");
     }
 }

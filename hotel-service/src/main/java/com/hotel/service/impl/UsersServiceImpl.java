@@ -59,10 +59,13 @@ public class UsersServiceImpl implements UsersService {
             authorities.add(new SimpleGrantedAuthority(role.getRoleCode()));
         }
 
+        //判断账户是否可用 1为可用 2为禁用
+        boolean enabled = users.getStatus() == 1;
+
         //创建spring security的user对象并返回
         User user = new User(users.getUsername(),
                 users.getPassword(),
-                users.getStatus() == 1,
+                enabled,
                 true,
                 true,
                 true,

@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTTP 403 Forbidden</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/403.png"/>
+    <link rel="stylesheet" href="static/css/403.css" type="text/css">
+</head>
+<body>
+<h1>403</h1>
+<div><p>> <span>ERROR CODE</span>: "<i>HTTP 403 Forbidden</i>"</p>
+    <p>> <span>ERROR DESCRIPTION</span>: "<i>Access Denied. You Do Not Have The Permission To Access This Page On This
+        Server</i>"</p>
+    <p>> <span>ERROR POSSIBLY CAUSED BY</span>: [<b>You don't have permission</b>...]</p>
+    <p>> <span>SOME PAGES ON THIS SERVER THAT YOU DO HAVE PERMISSION TO ACCESS</span>: [<a href="/">Home Page</a>, <a
+            href="/login.jsp">ReLogin</a>...]</p>
+    <p>> <span>HAVE A NICE DAY SIR AXLEROD :-)</span></p>
+</div>
+
+<!--<a class="avatar" href="https://codepen.io/leenalavanya/" &#45;&#45;%>-->
+<!--    <%&#45;&#45; title="If you liked this pen, don't forget to heart, share and follow ❤">-->
+<!--    <img&#45;&#45;-->
+<!--            %>-->
+<!--        <%&#45;&#45; src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/157344/profile/profile-512.jpg?1535437978"/>-->
+<!--</a>-->
+</body>
+<script>
+    alert("You don't have permission!");
+    var str = document.getElementsByTagName('div')[0].innerHTML.toString();
+    var i = 0;
+    document.getElementsByTagName('div')[0].innerHTML = "";
+
+    setTimeout(function () {
+        var se = setInterval(function () {
+            i++;
+            document.getElementsByTagName('div')[0].innerHTML = str.slice(0, i) + "|";
+            if (i == str.length) {
+                clearInterval(se);
+                document.getElementsByTagName('div')[0].innerHTML = str;
+            }
+        }, 10);
+    }, 0);
+
+</script>
+</html>

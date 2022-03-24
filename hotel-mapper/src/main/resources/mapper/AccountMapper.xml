@@ -12,6 +12,13 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="regist_time" property="registTime" jdbcType="TIMESTAMP"/>
     </resultMap>
+
+    <!--前台用户角色关系配置-->
+    <resultMap id="AccountRoleResultMap" type="com.hotel.pojo.entity.Account" extends="BaseResultMap">
+        <collection property="roleList" ofType="com.hotel.pojo.entity.AccountRole" column="id"
+                    select="com.hotel.mapper.AccountRoleMapper.selectAccountRoleByAccountId"/>
+    </resultMap>
+
     <!--根据主键删除前台用户-->
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         DELETE
@@ -19,37 +26,55 @@
         WHERE id = #{id,jdbcType=BIGINT}
     </delete>
     <!--新增前台用户-->
-    <insert id="insert" parameterType="com.hotel.pojo.entity.Account">
-        INSERT INTO t_account (id, login_name, password,
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO t_account (login_name, `password`,
                                real_name, id_card, phone,
-                               email, status, regist_time)
-        VALUES (#{id,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+                               email, `status`, regist_time)
+        VALUES (#{loginName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
                 #{realName,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
                 #{email,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{registTime,jdbcType=TIMESTAMP})
     </insert>
     <!--根据id修改前台用户信息-->
     <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Account">
         UPDATE t_account
-        SET login_name  = #{loginName,jdbcType=VARCHAR},
-            password    = #{password,jdbcType=VARCHAR},
-            real_name   = #{realName,jdbcType=VARCHAR},
-            id_card     = #{idCard,jdbcType=VARCHAR},
-            phone       = #{phone,jdbcType=VARCHAR},
-            email       = #{email,jdbcType=VARCHAR},
-            status      = #{status,jdbcType=INTEGER},
-            regist_time = #{registTime,jdbcType=TIMESTAMP}
+        <set>
+            <if test="loginName!=null and loginName!=''">
+                login_name = #{loginName,jdbcType=VARCHAR},
+            </if>
+            <if test="password!=null and password!=''">
+                `password` = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="realName!=null and realName!=''">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard!=null and idCard!=''">
+                id_card = #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="email!=null and email!=''">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="status!=null">
+                `status` = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="registTime!=null">
+                regist_time = #{registTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
         WHERE id = #{id,jdbcType=BIGINT}
     </update>
     <!--根据id查询前台用户详情-->
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
         SELECT id,
                login_name,
-               password,
+               `password`,
                real_name,
                id_card,
                phone,
                email,
-               status,
+               `status`,
                regist_time
         FROM t_account
         WHERE id = #{id,jdbcType=BIGINT}
@@ -58,13 +83,29 @@
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT id,
                login_name,
-               password,
+               `password`,
                real_name,
                id_card,
                phone,
                email,
-               status,
+               `status`,
                regist_time
         FROM t_account
+    </select>
+
+    <!--根据用户名查询用户详情-->
+    <select id="selectAccountByName" resultMap="AccountRoleResultMap">
+        SELECT id,
+               login_name,
+               `password`,
+               real_name,
+               id_card,
+               phone,
+               email,
+               `status`,
+               regist_time
+        FROM t_account
+        WHERE login_name = #{loginName}
+
     </select>
 </mapper>

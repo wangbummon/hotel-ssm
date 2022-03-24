@@ -38,4 +38,10 @@ public interface RoomService {
      * @return
      */
     ResponseVO removeRoom(Integer id);
+
+    /**
+     * redis获取所有房间
+     * @return
+     */
+    String getAllRooms();
 }

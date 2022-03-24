@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author az
@@ -14,7 +15,7 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value = "Account对象",description = "前台用户实体类")
+@ApiModel(value = "Account对象", description = "前台用户实体类")
 public class Account {
     /**
      * 用户编号（主键）
@@ -71,4 +72,10 @@ public class Account {
      */
     @ApiModelProperty("注册时间")
     private Date registTime;
+
+    /**
+     * 角色列表
+     */
+    @ApiModelProperty("角色列表")
+    private List<AccountRole> roleList;
 }

@@ -33,13 +33,13 @@ public class ResponseUtils {
     }
 
     public static ResponseVO success(String msg, Object data, Long count) {
-        ResponseVO responseVO = new ResponseVO();
-        responseVO.setCode(0);
-        responseVO.setStatus(ResponseEnums.SUCCESS.getStatus());
-        responseVO.setMsg(msg);
-        responseVO.setData(data);
-        responseVO.setCount(count);
-        return responseVO;
+        return ResponseVO.builder()
+                .code(0)
+                .count(count)
+                .status(ResponseEnums.SUCCESS.getStatus())
+                .msg(msg)
+                .data(data)
+                .build();
     }
 
     /**
@@ -60,12 +60,13 @@ public class ResponseUtils {
     }
 
     public static ResponseVO failed(String msg, Object data) {
-        ResponseVO responseVO = new ResponseVO();
-        responseVO.setCode(1);
-        responseVO.setStatus(ResponseEnums.FAILED.getStatus());
-        responseVO.setMsg(msg);
-        responseVO.setData(data);
-        return responseVO;
+        return ResponseVO.builder()
+                .code(1)
+                .status(ResponseEnums.FAILED.getStatus())
+                .count(0L)
+                .msg(msg)
+                .data(data)
+                .build();
     }
 
     /**
@@ -74,13 +75,13 @@ public class ResponseUtils {
      * @return
      */
     public static ResponseVO empty() {
-        ResponseVO responseVO = new ResponseVO();
-        responseVO.setCode(0);
-        responseVO.setStatus(ResponseEnums.EMPTY.getStatus());
-        responseVO.setMsg(ResponseEnums.EMPTY.getMsg());
-        responseVO.setData(null);
-        responseVO.setCount(0L);
-        return responseVO;
+        return ResponseVO.builder()
+                .code(0)
+                .count(0L)
+                .status(ResponseEnums.EMPTY.getStatus())
+                .msg(ResponseEnums.EMPTY.getMsg())
+                .data(null)
+                .build();
     }
 
     /**
@@ -93,11 +94,31 @@ public class ResponseUtils {
     }
 
     public static ResponseVO hasLinked(String msg) {
-        ResponseVO responseVO = new ResponseVO();
-        responseVO.setCode(1);
-        responseVO.setStatus(ResponseEnums.HAS_LINKED.getStatus());
-        responseVO.setMsg(msg);
-        responseVO.setData(null);
-        return responseVO;
+
+        return ResponseVO.builder()
+                .code(1)
+                .count(0L)
+                .status(ResponseEnums.HAS_LINKED.getStatus())
+                .msg(msg)
+                .data(null)
+                .build();
     }
+
+    /**
+     * 数据已存在
+     *
+     * @param msg 提示信息
+     * @return
+     */
+    public static ResponseVO exists(String msg) {
+        return ResponseVO.builder()
+                .code(1)
+                .count(1L)
+                .status(ResponseEnums.EXISTS.getStatus())
+                .msg(msg)
+                .data(null)
+                .build();
+    }
+
+
 }

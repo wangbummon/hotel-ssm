@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hotel.mapper.AccountRoleMapper">
+
+    <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.AccountRole">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="role_code" jdbcType="VARCHAR" property="roleCode"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="role_desc" jdbcType="VARCHAR" property="roleDesc"/>
+    </resultMap>
+
+    <!--根据用户id查询角色-->
+    <select id="selectAccountRoleByAccountId" resultMap="BaseResultMap">
+        SELECT id,
+               role_code,
+               role_name,
+               role_desc
+        FROM t_role
+        WHERE id = ANY (SELECT role_id FROM t_account_role WHERE account_id = #{accountId})
+    </select>
+</mapper>

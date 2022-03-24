@@ -8,6 +8,7 @@ import com.hotel.pojo.vo.RoleVO;
 import com.hotel.util.MyBeanUtils;
 import com.hotel.util.UUIDUtils;
 import org.junit.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,12 +25,7 @@ public class Tests {
 
     @Test
     public void test1() throws IOException {
-        String oldName = "1.txt";
-        //获取文件后缀名.
-        String extension = Objects.requireNonNull(oldName).substring(oldName.lastIndexOf("."));
-
-        String newName = UUIDUtils.randomUUID() + extension;
-        System.out.println(newName);
+        System.out.println(new BCryptPasswordEncoder().encode("123456"));
     }
 
 

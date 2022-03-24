@@ -35,6 +35,8 @@ public class DeptServiceImpl implements DeptService {
     private final DeptMapper deptMapper;
     private final UsersMapper usersMapper;
 
+    private final Jedis jedis = JedisPoolUtils.getJedis();
+
     /**
      * 查询所部门
      *
@@ -65,7 +67,7 @@ public class DeptServiceImpl implements DeptService {
         boolean insert = deptMapper.insert(dept);
         //添加成功后清除redis中部门缓存
         if (insert) {
-            JedisPoolUtils.getJedis().del(RedisKeyEnums.DEPT_LIST.getKey());
+            jedis.del(RedisKeyEnums.DEPT_LIST.getKey());
         }
         return CheckUtils.checkSuccess(insert);
     }
@@ -82,7 +84,7 @@ public class DeptServiceImpl implements DeptService {
         MyBeanUtils.copyProperties(params, dept);
         boolean update = deptMapper.updateByPrimaryKey(dept);
         if (update) {
-            JedisPoolUtils.getJedis().del(RedisKeyEnums.DEPT_LIST.getKey());
+            jedis.del(RedisKeyEnums.DEPT_LIST.getKey());
         }
         return CheckUtils.checkSuccess(update);
     }
@@ -97,7 +99,7 @@ public class DeptServiceImpl implements DeptService {
     public ResponseVO removeDept(Integer id) {
         boolean delete = deptMapper.deleteByPrimaryKey(id);
         if (delete) {
-            JedisPoolUtils.getJedis().del(RedisKeyEnums.DEPT_LIST.getKey());
+            jedis.del(RedisKeyEnums.DEPT_LIST.getKey());
         }
         return CheckUtils.checkSuccess(delete);
     }
@@ -124,14 +126,12 @@ public class DeptServiceImpl implements DeptService {
      */
     @Override
     public String selectAllDepts() {
-        Jedis jedis = JedisPoolUtils.getJedis();
         //获取redis中的数据
         String deptList = jedis.get(RedisKeyEnums.DEPT_LIST.getKey());
         //验证查出数据是否为空 若为空则去数据库查找并存至redis
         if (StringUtils.isEmpty(deptList)) {
-            List<Dept> depts = deptMapper.selectAll(null);
-            jedis.set(RedisKeyEnums.DEPT_LIST.getKey(), JSON.toJSONString(depts));
-            deptList = jedis.get(RedisKeyEnums.DEPT_LIST.getKey());
+            deptList = JSON.toJSONString(deptMapper.selectAll(null));
+            jedis.set(RedisKeyEnums.DEPT_LIST.getKey(), deptList);
         }
         return deptList;
     }
@@ -146,6 +146,9 @@ public class DeptServiceImpl implements DeptService {
     public ResponseVO removeDepts(String ids) {
         List deptIds = Arrays.asList(ids.split(","));
         boolean remove = deptMapper.removeDepts(deptIds);
+        if (remove) {
+            jedis.del(RedisKeyEnums.DEPT_LIST.getKey());
+        }
         return CheckUtils.checkSuccess(remove);
     }
 

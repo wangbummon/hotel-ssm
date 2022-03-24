@@ -19,7 +19,12 @@ public enum RedisKeyEnums {
     /**
      * redis中保存房型列表的key
      */
-    ROOM_TYPE_LIST("room_type_list");
+    ROOM_TYPE_LIST("room_type_list"),
+
+    /**
+     * redis中保存房间列表的key
+     */
+    ROOM_LIST("room_list");
 
     private String key;
 

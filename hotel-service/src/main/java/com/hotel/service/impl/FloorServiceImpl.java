@@ -33,6 +33,8 @@ public class FloorServiceImpl implements FloorService {
 
     private final FloorMapper floorMapper;
 
+    private final Jedis jedis = JedisPoolUtils.getJedis();
+
 
     /**
      * 获取楼层列表
@@ -63,7 +65,7 @@ public class FloorServiceImpl implements FloorService {
         boolean insert = floorMapper.insert(params);
         //成功则删除redis中的数据
         if (insert) {
-            JedisPoolUtils.getJedis().del(RedisKeyEnums.FLOOR_LIST.getKey());
+            jedis.del(RedisKeyEnums.FLOOR_LIST.getKey());
         }
         return CheckUtils.checkSuccess(insert);
     }
@@ -81,7 +83,7 @@ public class FloorServiceImpl implements FloorService {
         boolean update = floorMapper.updateByPrimaryKey(floor);
         //成功则删除redis中的数据
         if (update) {
-            JedisPoolUtils.getJedis().del(RedisKeyEnums.FLOOR_LIST.getKey());
+            jedis.del(RedisKeyEnums.FLOOR_LIST.getKey());
         }
         return CheckUtils.checkSuccess(update);
     }
@@ -97,7 +99,7 @@ public class FloorServiceImpl implements FloorService {
         boolean remove = floorMapper.deleteByPrimaryKey(id);
         //成功则删除redis中的数据
         if (remove) {
-            JedisPoolUtils.getJedis().del(RedisKeyEnums.FLOOR_LIST.getKey());
+            jedis.del(RedisKeyEnums.FLOOR_LIST.getKey());
         }
         return CheckUtils.checkSuccess(remove);
     }
@@ -109,7 +111,6 @@ public class FloorServiceImpl implements FloorService {
      */
     @Override
     public String getAllFloors() {
-        Jedis jedis = JedisPoolUtils.getJedis();
         //获取楼层列表
         String floorList = jedis.get(RedisKeyEnums.FLOOR_LIST.getKey());
         //若获取到的为空则到数据库查询并存入redis

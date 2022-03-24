@@ -34,6 +34,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     private final RoomTypeMapper roomTypeMapper;
 
+    private final Jedis jedis = JedisPoolUtils.getJedis();
+
     /**
      * 获取房型列表
      *
@@ -69,7 +71,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         boolean insert = roomTypeMapper.insert(roomType);
         //成功则删除redis中的数据
         if (insert) {
-            JedisPoolUtils.getJedis().del(RedisKeyEnums.ROOM_TYPE_LIST.getKey());
+            jedis.del(RedisKeyEnums.ROOM_TYPE_LIST.getKey());
         }
         return CheckUtils.checkSuccess(insert);
     }
@@ -89,7 +91,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         boolean update = roomTypeMapper.updateByPrimaryKey(roomType);
         //成功则删除redis中的数据
         if (update) {
-            JedisPoolUtils.getJedis().del(RedisKeyEnums.ROOM_TYPE_LIST.getKey());
+            jedis.del(RedisKeyEnums.ROOM_TYPE_LIST.getKey());
         }
         return CheckUtils.checkSuccess(update);
     }
@@ -105,7 +107,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         boolean delete = roomTypeMapper.deleteByPrimaryKey(id);
         //成功则删除redis中的数据
         if (delete) {
-            JedisPoolUtils.getJedis().del(RedisKeyEnums.ROOM_TYPE_LIST.getKey());
+            jedis.del(RedisKeyEnums.ROOM_TYPE_LIST.getKey());
         }
         return CheckUtils.checkSuccess(delete);
     }
@@ -132,7 +134,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
      */
     @Override
     public String allRoomType() {
-        Jedis jedis = JedisPoolUtils.getJedis();
         //从redis中获取房型列表
         String roomTypeList = jedis.get(RedisKeyEnums.ROOM_TYPE_LIST.getKey());
         //如果获取到的为空 则到数据库查询并存入redis

@@ -1,6 +1,7 @@
 package com.hotel.pojo.vo;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
  * @date 2022/3/10
  */
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResponseVO {
