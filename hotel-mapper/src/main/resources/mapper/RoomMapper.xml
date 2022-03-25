@@ -116,6 +116,8 @@
                room_desc
         FROM t_room
     </select>
+
+    <!--查询带房型与楼层关系的房间列表-->
     <select id="getRoomList" resultMap="RoomResultMap">
         SELECT r.id,
         r.title,
@@ -129,6 +131,7 @@
         r.room_desc,
         rt.type_name,
         rt.room_num as roomNumber,
+        rt.price,
         f.floor_name
         FROM t_room r
         INNER JOIN t_room_type rt ON r.room_type_id = rt.id
@@ -150,5 +153,27 @@
                 AND r.status = #{status}
             </if>
         </where>
+    </select>
+
+    <!--根据id查询带房型与楼层关系的房间详情-->
+    <select id="selectDetailById" resultMap="RoomResultMap">
+        SELECT r.id,
+               r.title,
+               r.photo,
+               r.room_num,
+               r.room_type_id,
+               r.floor_id,
+               r.`status`,
+               r.room_requirement,
+               r.remark,
+               r.room_desc,
+               rt.type_name,
+               rt.room_num as roomNumber,
+               rt.price,
+               f.floor_name
+        FROM t_room r
+                 INNER JOIN t_room_type rt ON rt.id = r.room_type_id
+                 INNER JOIN t_floor f ON f.id = r.floor_id
+        WHERE r.id = #{id}
     </select>
 </mapper>

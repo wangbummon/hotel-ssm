@@ -30,13 +30,16 @@
                 <a class="fly-case-active" data-type="toTopNav" href="${pageContext.request.contextPath}/">首页</a>
             </li>
             <li data-id="room" class="layui-nav-item layui-hide-xs">
-                <a class="fly-case-active" data-type="toTopNav" href="${pageContext.request.contextPath}/room/list.html">房间</a>
+                <a class="fly-case-active" data-type="toTopNav" href="${pageContext.request.contextPath}/room/list">房间</a>
             </li>
             <li data-id="login" class="layui-nav-item layui-hide-xs">
                 <a class="fly-case-active" data-type="toTopNav" href="${pageContext.request.contextPath}/login.jsp">登录</a>
             </li>
             <li data-id="register" class="layui-nav-item layui-hide-xs layui-this">
                 <a class="fly-case-active" data-type="toTopNav" href="${pageContext.request.contextPath}/register.jsp">注册</a>
+            </li>
+            <li data-id="register" class="layui-nav-item layui-hide-xs ">
+                <a class="fly-case-active" data-type="toTopNav" href="http://localhost:8080/">进入后台</a>
             </li>
             <span class="layui-nav-bar" style="left: 560px; top: 55px; width: 0px; opacity: 0;"></span>
         </ul>

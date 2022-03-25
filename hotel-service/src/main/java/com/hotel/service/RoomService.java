@@ -1,7 +1,11 @@
 package com.hotel.service;
 
+import com.hotel.pojo.entity.Room;
 import com.hotel.pojo.po.RoomPO;
 import com.hotel.pojo.vo.ResponseVO;
+import com.hotel.pojo.vo.RoomVO;
+
+import java.util.List;
 
 /**
  * @author az
@@ -27,6 +31,7 @@ public interface RoomService {
 
     /**
      * 修改房间信息
+     *
      * @param params 房间PO
      * @return
      */
@@ -34,6 +39,7 @@ public interface RoomService {
 
     /**
      * 删除房间
+     *
      * @param id 房间id
      * @return
      */
@@ -41,7 +47,24 @@ public interface RoomService {
 
     /**
      * redis获取所有房间
+     *
      * @return
      */
     String getAllRooms();
+
+    /**
+     * 根据id查询详情
+     *
+     * @param id 房间id
+     * @return
+     */
+    RoomVO selectDetailById(Integer id);
+
+    /**
+     * 前台查询房间列表
+     *
+     * @param roomPO 房间PO
+     * @return
+     */
+    List<Room> selectRoomList(RoomPO roomPO);
 }

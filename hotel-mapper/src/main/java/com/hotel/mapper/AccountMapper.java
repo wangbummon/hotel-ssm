@@ -53,4 +53,13 @@ public interface AccountMapper {
      * @return
      */
     Account selectAccountByName(@Param("loginName") String loginName);
+
+    /**
+     * 根据用户名获取用户信息
+     *
+     * @param loginName 登录名
+     * @return
+     */
+    @Select("SELECT * FROM t_account WHERE login_name = #{loginName}")
+    Account getAccountByName(@Param("loginName") String loginName);
 }

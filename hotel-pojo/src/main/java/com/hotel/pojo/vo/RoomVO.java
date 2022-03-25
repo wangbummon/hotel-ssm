@@ -14,4 +14,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class RoomVO extends Room {
 
+
 }

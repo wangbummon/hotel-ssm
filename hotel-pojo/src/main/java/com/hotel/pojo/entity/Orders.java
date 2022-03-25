@@ -1,7 +1,9 @@
 package com.hotel.pojo.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -44,7 +46,7 @@ public class Orders {
      * 房间id
      */
     @ApiModelProperty("房间id")
-    private Long roomId;
+    private Integer roomId;
 
     /**
      * 入住人姓名
@@ -79,12 +81,16 @@ public class Orders {
     /**
      * 入住日期
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty("入住日期")
     private Date arriveDate;
 
     /**
      * 退房日期
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty("退房日期")
     private Date leaveDate;
 

@@ -201,9 +201,9 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">房间详情</label>
+                        <label class="layui-form-label">房间描述</label>
                         <div class="layui-input-block">
-                            <textarea id="addRoomDesc" name="roomDesc" style="display: none;"></textarea>
+                            <textarea id="addRoomDesc" name="roomDesc" class="layui-textarea"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -293,9 +293,9 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">房间详情</label>
+                        <label class="layui-form-label">房间描述</label>
                         <div class="layui-input-block">
-                            <textarea id="editRoomDesc" name="roomDesc" style="display: none;"></textarea>
+                            <textarea id="editRoomDesc" name="roomDesc" class="layui-textarea"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -490,12 +490,6 @@
                 }
             });
             layer.full(mainIndex);
-            detailIndex = layedit.build("addRoomDesc", {
-                uploadImage: {
-                    url: "/admin/roomDetailImg",
-                    type: "POST"
-                }
-            });
         }
 
         /**
@@ -557,12 +551,6 @@
                 }
             });
             layer.full(mainIndex);
-            detailIndex = layedit.build("editRoomDesc", {
-                uploadImage: {
-                    url: "/admin/roomDetailImg",
-                    type: "POST"
-                }
-            });
         }
 
         /**

@@ -1,64 +1,218 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hotel.mapper.OrdersMapper" >
-  <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Orders" >
-    <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="orders_num" property="ordersNum" jdbcType="VARCHAR" />
-    <result column="account_id" property="accountId" jdbcType="BIGINT" />
-    <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER" />
-    <result column="room_id" property="roomId" jdbcType="BIGINT" />
-    <result column="reservation_name" property="reservationName" jdbcType="VARCHAR" />
-    <result column="id_card" property="idCard" jdbcType="VARCHAR" />
-    <result column="phone" property="phone" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="reserve_date" property="reserveDate" jdbcType="TIMESTAMP" />
-    <result column="arrive_date" property="arriveDate" jdbcType="DATE" />
-    <result column="leave_date" property="leaveDate" jdbcType="DATE" />
-    <result column="reserve_price" property="reservePrice" jdbcType="DECIMAL" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from t_orders
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" parameterType="com.hotel.pojo.entity.Orders" >
-    insert into t_orders (id, orders_num, account_id, 
-      room_type_id, room_id, reservation_name, 
-      id_card, phone, status, 
-      reserve_date, arrive_date, leave_date, 
-      reserve_price, remark)
-    values (#{id,jdbcType=BIGINT}, #{ordersNum,jdbcType=VARCHAR}, #{accountId,jdbcType=BIGINT}, 
-      #{roomTypeId,jdbcType=INTEGER}, #{roomId,jdbcType=BIGINT}, #{reservationName,jdbcType=VARCHAR}, 
-      #{idCard,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
-      #{reserveDate,jdbcType=TIMESTAMP}, #{arriveDate,jdbcType=DATE}, #{leaveDate,jdbcType=DATE}, 
-      #{reservePrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR})
-  </insert>
-  <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Orders" >
-    update t_orders
-    set orders_num = #{ordersNum,jdbcType=VARCHAR},
-      account_id = #{accountId,jdbcType=BIGINT},
-      room_type_id = #{roomTypeId,jdbcType=INTEGER},
-      room_id = #{roomId,jdbcType=BIGINT},
-      reservation_name = #{reservationName,jdbcType=VARCHAR},
-      id_card = #{idCard,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER},
-      reserve_date = #{reserveDate,jdbcType=TIMESTAMP},
-      arrive_date = #{arriveDate,jdbcType=DATE},
-      leave_date = #{leaveDate,jdbcType=DATE},
-      reserve_price = #{reservePrice,jdbcType=DECIMAL},
-      remark = #{remark,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select id, orders_num, account_id, room_type_id, room_id, reservation_name, id_card, 
-    phone, status, reserve_date, arrive_date, leave_date, reserve_price, remark
-    from t_orders
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select id, orders_num, account_id, room_type_id, room_id, reservation_name, id_card, 
-    phone, status, reserve_date, arrive_date, leave_date, reserve_price, remark
-    from t_orders
-  </select>
+<mapper namespace="com.hotel.mapper.OrdersMapper">
+    <resultMap id="BaseResultMap" type="com.hotel.pojo.entity.Orders">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="orders_num" property="ordersNum" jdbcType="VARCHAR"/>
+        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER"/>
+        <result column="room_id" property="roomId" jdbcType="BIGINT"/>
+        <result column="reservation_name" property="reservationName" jdbcType="VARCHAR"/>
+        <result column="id_card" property="idCard" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="reserve_date" property="reserveDate" jdbcType="TIMESTAMP"/>
+        <result column="arrive_date" property="arriveDate" jdbcType="DATE"/>
+        <result column="leave_date" property="leaveDate" jdbcType="DATE"/>
+        <result column="reserve_price" property="reservePrice" jdbcType="DECIMAL"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--订单PO resultMap-->
+    <resultMap id="OrdersPOResultMap" type="com.hotel.pojo.po.OrdersPO">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="orders_num" property="ordersNum" jdbcType="VARCHAR"/>
+        <result column="account_id" property="accountId" jdbcType="BIGINT"/>
+        <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER"/>
+        <result column="room_id" property="roomId" jdbcType="BIGINT"/>
+        <result column="reservation_name" property="reservationName" jdbcType="VARCHAR"/>
+        <result column="id_card" property="idCard" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="reserve_date" property="reserveDate" jdbcType="TIMESTAMP"/>
+        <result column="arrive_date" property="arriveDate" jdbcType="DATE"/>
+        <result column="leave_date" property="leaveDate" jdbcType="DATE"/>
+        <result column="reserve_price" property="reservePrice" jdbcType="DECIMAL"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--订单房型关系配置-->
+    <resultMap id="OrdersRoomTypeResultMap" type="com.hotel.pojo.po.OrdersPO" extends="OrdersPOResultMap">
+        <association property="roomType" javaType="com.hotel.pojo.entity.RoomType">
+            <id column="id" property="id" jdbcType="INTEGER"/>
+            <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+            <result column="photo" property="photo" jdbcType="VARCHAR"/>
+            <result column="price" property="price" jdbcType="DECIMAL"/>
+        </association>
+        <association property="room" javaType="com.hotel.pojo.entity.Room">
+            <id column="id" property="id" jdbcType="INTEGER"/>
+            <result column="title" property="title" jdbcType="VARCHAR"/>
+            <result column="photo" property="photo" jdbcType="VARCHAR"/>
+            <result column="room_num" property="roomNum" jdbcType="VARCHAR"/>
+            <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER"/>
+            <result column="floor_id" property="floorId" jdbcType="INTEGER"/>
+            <result column="status" property="status" jdbcType="INTEGER"/>
+        </association>
+    </resultMap>
+
+    <!--删除订单-->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE
+        FROM t_orders
+        WHERE id = #{id,jdbcType=BIGINT}
+    </delete>
+
+    <!--新增订单-->
+    <insert id="insert" parameterType="com.hotel.pojo.entity.Orders">
+        INSERT INTO t_orders (orders_num, account_id,
+                              room_type_id, room_id, reservation_name,
+                              id_card, phone, `status`,
+                              reserve_date, arrive_date, leave_date,
+                              reserve_price, remark)
+        VALUES (#{ordersNum,jdbcType=VARCHAR}, #{accountId,jdbcType=BIGINT},
+                #{roomTypeId,jdbcType=INTEGER}, #{roomId,jdbcType=INTEGER}, #{reservationName,jdbcType=VARCHAR},
+                #{idCard,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},
+                #{reserveDate,jdbcType=TIMESTAMP}, #{arriveDate,jdbcType=DATE}, #{leaveDate,jdbcType=DATE},
+                #{reservePrice,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR})
+    </insert>
+
+    <!--修改订单详情-->
+    <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Orders">
+        UPDATE t_orders
+        <set>
+            <if test="ordersNum!=null and ordersNum!=''">
+                orders_num = #{ordersNum,jdbcType=VARCHAR},
+            </if>
+            <if test="accountId!=null">
+                account_id = #{accountId,jdbcType=BIGINT},
+            </if>
+            <if test="roomTypeId!=null">
+                room_type_id = #{roomTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="roomId!=null">
+                room_id = #{roomId,jdbcType=INTEGER},
+            </if>
+            <if test="reservationName!=null and reservationName!=''">
+                reservation_name = #{reservationName,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard!=null and idCard!=''">
+                id_card = #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="status!=null">
+                `status` = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="reserveDate!=null">
+                reserve_date = #{reserveDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="arriveDate!=null">
+                arrive_date = #{arriveDate,jdbcType=DATE},
+            </if>
+            <if test="leaveDate!=null">
+                leave_date = #{leaveDate,jdbcType=DATE},
+            </if>
+            <if test="reservePrice!=null">
+                reserve_price = #{reservePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="remark!=null and remark!=''">
+                remark = #{remark,jdbcType=VARCHAR}
+            </if>
+        </set>
+        WHERE id = #{id,jdbcType=BIGINT}
+    </update>
+
+    <!--批量确认订单-->
+    <update id="confirmOrdersByIds">
+        UPDATE t_orders SET status = 1 WHERE id IN
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <!--查看订单详情-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT id,
+               orders_num,
+               account_id,
+               room_type_id,
+               room_id,
+               reservation_name,
+               id_card,
+               phone,
+               `status`,
+               reserve_date,
+               arrive_date,
+               leave_date,
+               reserve_price,
+               remark
+        FROM t_orders
+        WHERE id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <!--查询所有订单-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT id,
+               orders_num,
+               account_id,
+               room_type_id,
+               room_id,
+               reservation_name,
+               id_card,
+               phone,
+               `status`,
+               reserve_date,
+               arrive_date,
+               leave_date,
+               reserve_price,
+               remark
+        FROM t_orders
+    </select>
+
+    <!--查询订单列表-->
+    <select id="getOrdersList" resultMap="OrdersRoomTypeResultMap">
+        SELECT o.id,
+        o.orders_num,
+        o.account_id,
+        o.room_type_id,
+        o.room_id,
+        o.reservation_name,
+        o.id_card,
+        o.phone,
+        o.status,
+        o.reserve_date,
+        o.arrive_date,
+        o.leave_date,
+        o.reserve_price,
+        o.remark,
+        rt.type_name,
+        r.room_num
+        FROM t_orders o
+        INNER JOIN t_room_type rt ON o.room_type_id = rt.id
+        INNER JOIN t_room r ON r.id = o.room_id
+        <where>
+            <if test="reservationName!=null and reservationName!=''">
+                AND o.reservation_name LIKE CONCAT('%',#{reservationName},'%')
+            </if>
+            <if test="idCard!=null and idCard!=''">
+                AND o.id_card LIKE CONCAT('%',#{idCard},'%')
+            </if>
+            <if test="phone!=null and phone!=''">
+                AND o.phone LIKE CONCAT('%',#{phone},'%')
+            </if>
+            <if test="roomTypeId!=null">
+                AND o.room_type_id = #{roomTypeId}
+            </if>
+            <if test="status!=null">
+                AND o.status = #{status}
+            </if>
+            <if test="startDate!=null">
+                <![CDATA[ AND o.reserve_date >= #{startDate} ]]>
+            </if>
+            <if test="endDate!=null">
+                <![CDATA[ AND o.reserve_date <= #{endDate} ]]>
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -402,7 +402,6 @@
             let checked = data.elem.checked ? 1 : 0;
             //获取所需属性值
             let userId = data.elem.attributes['userId'].nodeValue;
-            // layer.confirm("确定要执行此操作吗？", {icon: 3, title: "提示"}, function (index) {
             $.ajax({
                 url: "/admin/users/" + userId,
                 type: "PUT",

@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(tags = "首页")
 @RestController
-@RequestMapping("/index")
+@RequestMapping("/roomType")
 @RequiredArgsConstructor
 public class RoomTypeController {
     private final RoomTypeService roomTypeService;
 
     @ApiOperation("加载首页房型分类")
-    @GetMapping("/roomType")
+    @GetMapping("/list")
     public String getRoomTypeList() {
         return roomTypeService.allRoomType();
     }

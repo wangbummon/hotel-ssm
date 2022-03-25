@@ -21,6 +21,7 @@ http://www.springframework.org/schema/security/spring-security.xsd">
         <security:intercept-url pattern="/login.jsp" access="permitAll()"/>
         <!-- 定义过滤规则 -->
         <!--<security:intercept-url pattern="/**" access="hasAnyRole('ROLE_USER')"/>-->
+        <security:intercept-url pattern="/room/detail/**" access="isAuthenticated()"/>
         <!-- 配置自定义登录认证页面 -->
         <security:form-login
                 login-page="/login.jsp"
@@ -28,8 +29,7 @@ http://www.springframework.org/schema/security/spring-security.xsd">
                 default-target-url="/index.jsp"
                 authentication-failure-url="/login.jsp"
                 username-parameter="loginName"
-                password-parameter="password"
-        />
+                password-parameter="password"/>
 
         <!-- 防止点击劫持攻击 -->
         <!-- 启用后，将X-Frame-Options标头添加到响应中，这使较新的浏览器可以进行一些安全检查并防止点击劫持攻击 -->

@@ -22,7 +22,7 @@ public class IndexController {
     private final FloorService floorService;
     private final RoomService roomService;
 
-    @RequestMapping("/index")
+    @RequestMapping("/index.html")
     public String floorList(Model model) {
         //查询所有楼层
         String allFloors = floorService.getAllFloors();

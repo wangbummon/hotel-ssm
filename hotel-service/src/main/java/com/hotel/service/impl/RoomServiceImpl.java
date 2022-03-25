@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -109,9 +110,36 @@ public class RoomServiceImpl implements RoomService {
     public String getAllRooms() {
         String roomList = jedis.get(RedisKeyEnums.ROOM_LIST.getKey());
         if (StringUtils.isEmpty(roomList)) {
-            roomList = JSON.toJSONString(roomMapper.selectAll());
+            roomList = JSON.toJSONString(roomMapper.getRoomList(null));
             jedis.set(RedisKeyEnums.ROOM_LIST.getKey(), roomList);
         }
         return roomList;
+    }
+
+    /***
+     * 根据房间id查询详情
+     *
+     * @param id 房间id
+     * @return
+     */
+    @Override
+    public RoomVO selectDetailById(Integer id) {
+        Room room = roomMapper.selectDetailById(id);
+        RoomVO roomVO = new RoomVO();
+        MyBeanUtils.copyProperties(room, roomVO);
+        return roomVO;
+    }
+
+    /**
+     * 前台获取房间列表
+     *
+     * @param roomPO 房间PO
+     * @return
+     */
+    @Override
+    public List<Room> selectRoomList(RoomPO roomPO) {
+        Room room = new Room();
+        MyBeanUtils.copyProperties(roomPO, room);
+        return roomMapper.getRoomList(room);
     }
 }

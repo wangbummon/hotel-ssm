@@ -81,9 +81,23 @@ public class PageController {
         return "roomTypeManager";
     }
 
-    @ApiOperation("跳转至房间管理页码")
+    /**
+     * 房间管理页面
+     * @return
+     */
+    @ApiOperation("跳转至房间管理页面")
     @RequestMapping("/roomManager")
     public String roomManager() {
         return "roomManager";
+    }
+
+    /**
+     * 订单管理页面
+     * @return
+     */
+    @ApiOperation("跳转至订单管理页面")
+    @RequestMapping("/ordersManager")
+    public String ordersManager(){
+        return "ordersManager";
     }
 }
