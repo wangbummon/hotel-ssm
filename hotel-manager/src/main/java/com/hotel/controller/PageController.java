@@ -83,6 +83,7 @@ public class PageController {
 
     /**
      * 房间管理页面
+     *
      * @return
      */
     @ApiOperation("跳转至房间管理页面")
@@ -93,11 +94,18 @@ public class PageController {
 
     /**
      * 订单管理页面
+     *
      * @return
      */
     @ApiOperation("跳转至订单管理页面")
     @RequestMapping("/ordersManager")
-    public String ordersManager(){
+    public String ordersManager() {
         return "ordersManager";
+    }
+
+    @ApiOperation("跳转至入住管理页面")
+    @RequestMapping("/checkinManager")
+    public String checkinManager() {
+        return "checkinManager";
     }
 }

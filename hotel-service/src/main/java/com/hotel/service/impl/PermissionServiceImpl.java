@@ -62,7 +62,7 @@ public class PermissionServiceImpl implements PermissionService {
         Map<String, Object> logoInfo = new LinkedHashMap<>();
 
         //根据用户名获取当前登录用户
-        Users loginUser = usersMapper.getUserIdByUsername(request.getUserPrincipal().getName());
+        Users loginUser = usersMapper.getUserByUsername(request.getUserPrincipal().getName());
 
         List<Permission> menus = permissionMapper.selectPermissionByUser(loginUser.getId());
         //筛选出type为menu的集合
@@ -78,7 +78,7 @@ public class PermissionServiceImpl implements PermissionService {
         homeInfo.put("title", "首页");
         homeInfo.put("href", "/admin/desktop");
         //保存logoInfo对象信息
-        logoInfo.put("title", "后台管理系统");
+        logoInfo.put("title", "酒店后台管理系统");
         logoInfo.put("image", "/static/images/logo.png");
         logoInfo.put("href", "/index.jsp");
         //保存menuInfo对象信息

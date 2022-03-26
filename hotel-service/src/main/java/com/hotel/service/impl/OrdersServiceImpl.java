@@ -120,13 +120,14 @@ public class OrdersServiceImpl implements OrdersService {
 
     /**
      * 批量确认订单
+     *
      * @param ids 逗号隔开的订单id字符串
      * @return
      */
     @Override
     public ResponseVO confirmOrdersByIds(String ids) {
         List idList = Arrays.asList(ids.split(","));
-        ordersMapper.confirmOrdersByIds(idList);
-        return null;
+        boolean batchUpdate = ordersMapper.confirmOrdersByIds(idList);
+        return CheckUtils.checkSuccess(batchUpdate);
     }
 }

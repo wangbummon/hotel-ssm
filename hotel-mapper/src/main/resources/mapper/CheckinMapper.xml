@@ -5,7 +5,7 @@
         <id column="id" property="id" jdbcType="BIGINT"/>
         <id column="pay_price" property="payPrice" jdbcType="DECIMAL"/>
         <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER"/>
-        <result column="room_id" property="roomId" jdbcType="BIGINT"/>
+        <result column="room_id" property="roomId" jdbcType="INTEGER"/>
         <result column="customer_name" property="customerName" jdbcType="VARCHAR"/>
         <result column="id_card" property="idCard" jdbcType="VARCHAR"/>
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
@@ -19,48 +19,101 @@
         <result column="modify_user" property="modifyUser" jdbcType="INTEGER"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
     </resultMap>
+
+    <!--入住信息与房间、房型关系配置-->
+    <resultMap id="CheckinRoomResultMap" type="com.hotel.pojo.po.CheckinPO" extends="BaseResultMap">
+        <association property="roomType" javaType="com.hotel.pojo.entity.RoomType">
+            <id column="id" property="id" jdbcType="INTEGER"/>
+            <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+            <result column="photo" property="photo" jdbcType="VARCHAR"/>
+            <result column="price" property="price" jdbcType="DECIMAL"/>
+        </association>
+        <association property="room" javaType="com.hotel.pojo.entity.Room">
+            <id column="id" property="id" jdbcType="INTEGER"/>
+            <result column="title" property="title" jdbcType="VARCHAR"/>
+            <result column="photo" property="photo" jdbcType="VARCHAR"/>
+            <result column="room_num" property="roomNum" jdbcType="VARCHAR"/>
+            <result column="room_type_id" property="roomTypeId" jdbcType="INTEGER"/>
+            <result column="floor_id" property="floorId" jdbcType="INTEGER"/>
+            <result column="status" property="status" jdbcType="INTEGER"/>
+        </association>
+    </resultMap>
+
     <!--根据id删除入住信息-->
     <delete id="deleteByPrimaryKey" parameterType="map">
         DELETE
         FROM t_checkin
         WHERE id = #{id,jdbcType=BIGINT}
-          AND pay_price = #{payPrice,jdbcType=DECIMAL}
     </delete>
+
     <!--新增入住信息-->
     <insert id="insert" parameterType="com.hotel.pojo.entity.Checkin">
-        INSERT INTO t_checkin (id, pay_price, room_type_id,
+        INSERT INTO t_checkin (pay_price, room_type_id,
                                room_id, customer_name, id_card,
                                phone, arrive_date, leave_date,
                                orders_id, status, create_date,
-                               created_user, modify_date, modify_user,
+                               created_user,
                                remark)
-        VALUES (#{id,jdbcType=BIGINT}, #{payPrice,jdbcType=DECIMAL}, #{roomTypeId,jdbcType=INTEGER},
-                #{roomId,jdbcType=BIGINT}, #{customerName,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR},
+        VALUES (#{payPrice,jdbcType=DECIMAL}, #{roomTypeId,jdbcType=INTEGER},
+                #{roomId,jdbcType=INTEGER}, #{customerName,jdbcType=VARCHAR}, #{idCard,jdbcType=VARCHAR},
                 #{phone,jdbcType=VARCHAR}, #{arriveDate,jdbcType=DATE}, #{leaveDate,jdbcType=DATE},
                 #{ordersId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
-                #{createdUser,jdbcType=INTEGER}, #{modifyDate,jdbcType=TIMESTAMP}, #{modifyUser,jdbcType=INTEGER},
-                #{remark,jdbcType=VARCHAR})
+                #{createdUser,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR})
     </insert>
+
     <!--根据id修改入住信息-->
     <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Checkin">
         UPDATE t_checkin
-        SET room_type_id  = #{roomTypeId,jdbcType=INTEGER},
-            room_id       = #{roomId,jdbcType=BIGINT},
-            customer_name = #{customerName,jdbcType=VARCHAR},
-            id_card       = #{idCard,jdbcType=VARCHAR},
-            phone         = #{phone,jdbcType=VARCHAR},
-            arrive_date   = #{arriveDate,jdbcType=DATE},
-            leave_date    = #{leaveDate,jdbcType=DATE},
-            orders_id     = #{ordersId,jdbcType=BIGINT},
-            status        = #{status,jdbcType=INTEGER},
-            create_date   = #{createDate,jdbcType=TIMESTAMP},
-            created_user  = #{createdUser,jdbcType=INTEGER},
-            modify_date   = #{modifyDate,jdbcType=TIMESTAMP},
-            modify_user   = #{modifyUser,jdbcType=INTEGER},
-            remark        = #{remark,jdbcType=VARCHAR}
+        <set>
+            <if test="payPrice!=null">
+                pay_price = #{payPrice}, ``
+            </if>
+            <if test="roomTypeId!=null">
+                room_type_id = #{roomTypeId,jdbcType=INTEGER},
+            </if>
+            <if test="roomId!=null">
+                room_id = #{roomId,jdbcType=INTEGER},
+            </if>
+            <if test="customerName!=null and customerName!=''">
+                customer_name = #{customerName,jdbcType=VARCHAR},
+            </if>
+            <if test="idCard!=null and idCard!=''">
+                id_card = #{idCard,jdbcType=VARCHAR},
+            </if>
+            <if test="phone!=null and phone!=''">
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="arriveDate!=null">
+                arrive_date = #{arriveDate,jdbcType=DATE},
+            </if>
+            <if test="leaveDate!=null">
+                leave_date = #{leaveDate,jdbcType=DATE},
+            </if>
+            <if test="ordersId!=null">
+                orders_id = #{ordersId,jdbcType=BIGINT},
+            </if>
+            <if test="status!=null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createdUser!=null">
+                created_user = #{createdUser,jdbcType=INTEGER},
+            </if>
+            <if test="modifyDate!=null">
+                modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyUser!=null">
+                modify_user = #{modifyUser,jdbcType=INTEGER},
+            </if>
+            <if test="remark!=null and remark!=''">
+                remark = #{remark,jdbcType=VARCHAR}
+            </if>
+        </set>
         WHERE id = #{id,jdbcType=BIGINT}
-          AND pay_price = #{payPrice,jdbcType=DECIMAL}
     </update>
+
     <!--根据id查询入住信息-->
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map">
         SELECT id,
@@ -81,8 +134,8 @@
                remark
         FROM t_checkin
         WHERE id = #{id,jdbcType=BIGINT}
-          AND pay_price = #{payPrice,jdbcType=DECIMAL}
     </select>
+
     <!--查询所有入住信息-->
     <select id="selectAll" resultMap="BaseResultMap">
         SELECT id,
@@ -102,5 +155,54 @@
                modify_user,
                remark
         FROM t_checkin
+    </select>
+
+    <!--获取入住信息列表-->
+    <select id="getCheckinList" resultMap="CheckinRoomResultMap">
+        SELECT c.id,
+        c.pay_price,
+        c.room_type_id,
+        c.room_id,
+        c.customer_name,
+        c.id_card,
+        c.phone,
+        c.arrive_date,
+        c.leave_date,
+        c.orders_id,
+        c.status,
+        c.create_date,
+        c.created_user,
+        c.modify_date,
+        c.modify_user,
+        c.remark,
+        rt.type_name,
+        r.title,
+        r.room_num
+        FROM t_checkin c
+        INNER JOIN t_room_type rt ON rt.id = c.room_type_id
+        INNER JOIN t_room r ON r.id = c.room_id
+        <where>
+            <if test="customerName!=null and customerName!=''">
+                AND c.customer_name LIKE CONCAT('%',#{customerName},'%')
+            </if>
+            <if test="idCard!=null and idCard!=''">
+                AND c.id_card LIKE CONCAT('%',#{idCard},'%')
+            </if>
+            <if test="phone!=null and phone!=''">
+                AND c.phone LIKE CONCAT('%',#{phone},'%')
+            </if>
+            <if test="roomTypeId!=null">
+                AND c.room_type_id = #{roomTypeId}
+            </if>
+            <if test="status!=null">
+                AND c.status = #{status}
+            </if>
+            <if test="startDate!=null">
+                <![CDATA[ AND c.arrive_date >= #{startDate} ]]>
+            </if>
+            <if test="endDate!=null">
+                <![CDATA[ AND c.arrive_date <= #{endDate} ]]>
+            </if>
+        </where>
     </select>
 </mapper>

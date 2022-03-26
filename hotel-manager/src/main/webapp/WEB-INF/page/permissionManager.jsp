@@ -405,7 +405,9 @@
         });
         //修改窗口下拉菜单树点击事件
         dtree.on("node('editMenuTree')", function (obj) {
-            $("editParentId").val(obj.param.nodeId)
+            $("#editParentId").val(obj.param.nodeId)
+            console.log(obj)
+            console.log($("#editMenuHrefDiv").val())
             if ($("#editMenuHrefDiv").val() != null) {
                 $("#editMenuHrefDiv").show()
             } else {

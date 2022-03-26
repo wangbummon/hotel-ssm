@@ -4,13 +4,13 @@ import com.hotel.pojo.entity.Checkout;
 import java.util.List;
 
 public interface CheckoutMapper {
-    int deleteByPrimaryKey(Long id);
+    boolean deleteByPrimaryKey(Long id);
 
-    int insert(Checkout record);
+    boolean insert(Checkout record);
 
     Checkout selectByPrimaryKey(Long id);
 
     List<Checkout> selectAll();
 
-    int updateByPrimaryKey(Checkout record);
+    boolean updateByPrimaryKey(Checkout record);
 }

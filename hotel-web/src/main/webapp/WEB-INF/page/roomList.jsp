@@ -30,13 +30,16 @@
                 <a class="fly-case-active" data-type="toTopNav"
                    href="${pageContext.request.contextPath}/room/list">房间</a>
             </li>
-            <li data-id="login" class="layui-nav-item layui-hide-xs">
-                <a class="fly-case-active" data-type="toTopNav"
-                   href="${pageContext.request.contextPath}/login.jsp">登入</a>
-            </li>
-            <li data-id="register" class="layui-nav-item layui-hide-xs ">
-                <a class="fly-case-active" data-type="toTopNav" href="${pageContext.request.contextPath}/register.jsp">注册</a>
-            </li>
+            <c:if test="${pageContext.request.userPrincipal.name == null}">
+                <li data-id="login" class="layui-nav-item layui-hide-xs ">
+                    <a class="fly-case-active" data-type="toTopNav"
+                       href="${pageContext.request.contextPath}/login.jsp">登录</a>
+                </li>
+                <li data-id="register" class="layui-nav-item layui-hide-xs ">
+                    <a class="fly-case-active" data-type="toTopNav"
+                       href="${pageContext.request.contextPath}/register.jsp">注册</a>
+                </li>
+            </c:if>
             <li data-id="register" class="layui-nav-item layui-hide-xs ">
                 <a class="fly-case-active" data-type="toTopNav" href="http://localhost:8080/">进入后台</a>
             </li>

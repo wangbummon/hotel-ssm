@@ -304,11 +304,11 @@
                         data: {"ids": ids},
                         success: function (result) {
                             if (result.code === 0) {
-                                layer.alert(result.msg);
+                                layer.msg(result.msg);
                                 //刷新数据表格
                                 tableIns.reload();
                             } else {
-                                layer.alert(result.msg);
+                                layer.msg(result.msg);
                             }
                         }
                     });

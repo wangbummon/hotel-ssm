@@ -430,7 +430,7 @@
         function grantMenu(data) {
             mainIndex = layer.open({
                 type: 1,
-                title: "分配 [<font color='red'>" + data.roleName + "</font>] 角色权限",
+                title: "分配角色 [<font color='red'>" + data.roleName + "</font>] 的权限",
                 area: ["400px", "550px"],
                 content: $("#selectRoleMenuDiv"),
                 btn: ['<i class="layui-icon layui-icon-ok"> 确定</i>', '<i class="layui-icon layui-icon-close"> </i>取消'],

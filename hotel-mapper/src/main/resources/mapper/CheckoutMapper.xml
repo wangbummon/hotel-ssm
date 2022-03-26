@@ -18,22 +18,36 @@
     </delete>
     <!--新增退房信息-->
     <insert id="insert" parameterType="com.hotel.pojo.entity.Checkout">
-        INSERT INTO t_checkout (id, check_out_number, checkin_id,
+        INSERT INTO t_checkout (check_out_number, checkin_id,
                                 consume_price, create_date, created_user,
                                 remark)
-        VALUES (#{id,jdbcType=BIGINT}, #{checkOutNumber,jdbcType=VARCHAR}, #{checkinId,jdbcType=BIGINT},
+        VALUES (#{checkOutNumber,jdbcType=VARCHAR}, #{checkinId,jdbcType=BIGINT},
                 #{consumePrice,jdbcType=DECIMAL}, #{createDate,jdbcType=TIMESTAMP}, #{createdUser,jdbcType=INTEGER},
                 #{remark,jdbcType=VARCHAR})
     </insert>
     <!--根据id修改退房信息-->
     <update id="updateByPrimaryKey" parameterType="com.hotel.pojo.entity.Checkout">
         UPDATE t_checkout
-        SET check_out_number = #{checkOutNumber,jdbcType=VARCHAR},
-            checkin_id       = #{checkinId,jdbcType=BIGINT},
-            consume_price    = #{consumePrice,jdbcType=DECIMAL},
-            create_date      = #{createDate,jdbcType=TIMESTAMP},
-            created_user     = #{createdUser,jdbcType=INTEGER},
-            remark           = #{remark,jdbcType=VARCHAR}
+        <set>
+            <if test="checkOutNumber!=null and checkOutNumber!=''">
+                check_out_number = #{checkOutNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="checkinId!=null">
+                checkin_id = #{checkinId,jdbcType=BIGINT},
+            </if>
+            <if test="consumePrice!=null">
+                consume_price = #{consumePrice,jdbcType=DECIMAL},
+            </if>
+            <if test="createDate!=null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createUser!=null">
+                created_user = #{createdUser,jdbcType=INTEGER},
+            </if>
+            <if test="remark!=null and remark!=''">
+                remark = #{remark,jdbcType=VARCHAR}
+            </if>
+        </set>
         WHERE id = #{id,jdbcType=BIGINT}
     </update>
     <!--根据id查询退房信息-->

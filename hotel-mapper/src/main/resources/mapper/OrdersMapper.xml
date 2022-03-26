@@ -125,7 +125,7 @@
 
     <!--批量确认订单-->
     <update id="confirmOrdersByIds">
-        UPDATE t_orders SET status = 1 WHERE id IN
+        UPDATE t_orders SET status = 2 WHERE id IN
         <foreach collection="idList" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>

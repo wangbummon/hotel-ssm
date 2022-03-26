@@ -28,15 +28,15 @@
                 type = #{type},
             </if>
             <if test="title!=null and title !=''">
-                title = #{title}
+                title = #{title},
             </if>
             <if test="permissionCode!=null and permissionCode!=''">
                 permission_code = #{permissionCode},
             </if>
-            <if test="icon!=null">
+            <if test="icon!=null and icon!=''">
                 icon = #{icon},
             </if>
-            <if test="href!=null">
+            <if test="href!=null and href!=''">
                 href = #{href},
             </if>
             <if test="spread!=null">
