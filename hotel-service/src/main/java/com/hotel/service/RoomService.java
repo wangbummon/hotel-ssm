@@ -2,6 +2,7 @@ package com.hotel.service;
 
 import com.hotel.pojo.entity.Room;
 import com.hotel.pojo.po.RoomPO;
+import com.hotel.pojo.vo.CountVO;
 import com.hotel.pojo.vo.ResponseVO;
 import com.hotel.pojo.vo.RoomVO;
 
@@ -67,4 +68,12 @@ public interface RoomService {
      * @return
      */
     List<Room> selectRoomList(RoomPO roomPO);
+
+    /**
+     * 获取房间数量及房型、楼层数量
+     *
+     * @return
+     */
+    CountVO getRoomCount();
+
 }

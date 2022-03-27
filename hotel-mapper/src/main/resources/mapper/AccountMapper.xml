@@ -108,4 +108,17 @@
         WHERE login_name = #{loginName}
 
     </select>
+
+    <!--查询用户数量-->
+    <select id="getAccountCount" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM t_account
+        <where>
+            <if test="startTime!=null">
+                AND <![CDATA[ regist_time >= #{startTime} ]]>
+            </if>
+            <if test="endTime!=null">
+                AND <![CDATA[ regist_time <= #{endTime} ]]>
+            </if>
+        </where>
+    </select>
 </mapper>

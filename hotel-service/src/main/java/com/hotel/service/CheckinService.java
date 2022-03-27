@@ -1,6 +1,7 @@
 package com.hotel.service;
 
 import com.hotel.pojo.po.CheckinPO;
+import com.hotel.pojo.vo.CountVO;
 import com.hotel.pojo.vo.ResponseVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,4 +29,10 @@ public interface CheckinService {
      */
     ResponseVO checkinHotel(CheckinPO params, HttpServletRequest request);
 
+    /**
+     * 获取总盈利及昨日和七天盈利
+     *
+     * @return
+     */
+    CountVO getPriceCount();
 }

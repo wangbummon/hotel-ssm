@@ -6,10 +6,12 @@ import com.hotel.mapper.*;
 import com.hotel.pojo.entity.*;
 import com.hotel.pojo.po.CheckinPO;
 import com.hotel.pojo.vo.CheckinVO;
+import com.hotel.pojo.vo.CountVO;
 import com.hotel.pojo.vo.ResponseVO;
 import com.hotel.service.CheckinService;
 import com.hotel.util.CheckUtils;
 import com.hotel.util.MyBeanUtils;
+import com.hotel.util.MyDateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,6 +95,42 @@ public class CheckinServiceImpl implements CheckinService {
             roomMapper.updateByPrimaryKey(room);
         }
         return CheckUtils.checkSuccess(insert);
+    }
+
+    /**
+     * 获取总盈利及昨日和七天盈利
+     *
+     * @return
+     */
+    @Override
+    public CountVO getPriceCount() {
+        CountVO countVO = new CountVO();
+        CheckinPO checkinPO = new CheckinPO();
+        //查询总盈利
+        double priceCount = checkinMapper.getPriceCount(checkinPO);
+        countVO.setAllCount(String.valueOf(priceCount));
+
+        //获取昨日开始时间
+        Date yesterdayBegin = MyDateUtils.getYesterdayBegin();
+        checkinPO.setStartDate(yesterdayBegin);
+        Date yesterdayEnd = MyDateUtils.getYesterdayEnd();
+        checkinPO.setEndDate(yesterdayEnd);
+        //查询昨日盈利
+        double yesterdayPrice = checkinMapper.getPriceCount(checkinPO);
+        double priceYesterday = priceCount - yesterdayPrice;
+        countVO.setYesterdayAdd(String.valueOf(priceYesterday));
+
+        //获取七天前开始时间
+        Date weekDaysBegin = MyDateUtils.get7daysBegin();
+        //获取七天前的结束时间
+        Date weekDaysEnd = MyDateUtils.get7daysEnd();
+        checkinPO.setStartDate(weekDaysBegin);
+        checkinPO.setEndDate(weekDaysEnd);
+        //获取七天内盈利
+        double weekPriceAdd = checkinMapper.getPriceCount(checkinPO);
+        countVO.setWeekAdd(String.valueOf(weekPriceAdd));
+
+        return countVO;
     }
 
 }

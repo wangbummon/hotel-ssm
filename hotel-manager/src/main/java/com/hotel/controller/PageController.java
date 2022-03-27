@@ -97,15 +97,31 @@ public class PageController {
      *
      * @return
      */
-    @ApiOperation("跳转至订单管理页面")
+    @ApiOperation("跳转至预订管理页面")
     @RequestMapping("/ordersManager")
     public String ordersManager() {
         return "ordersManager";
     }
 
+    /**
+     * 入住管理
+     *
+     * @return
+     */
     @ApiOperation("跳转至入住管理页面")
     @RequestMapping("/checkinManager")
     public String checkinManager() {
         return "checkinManager";
+    }
+
+    /**
+     * 后台首页
+     *
+     * @return
+     */
+    @ApiOperation("跳转至后台首页")
+    @RequestMapping("/desktop")
+    public String desktop() {
+        return "desktop";
     }
 }

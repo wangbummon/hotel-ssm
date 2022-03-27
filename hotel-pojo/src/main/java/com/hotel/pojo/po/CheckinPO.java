@@ -49,4 +49,7 @@ public class CheckinPO extends Checkin {
 
     @ApiModelProperty("房间对象")
     private Room room;
+
+    @ApiModelProperty("入住数量")
+    private Integer checkinCount;
 }

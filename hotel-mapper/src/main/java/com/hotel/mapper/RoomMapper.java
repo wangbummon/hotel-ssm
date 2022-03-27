@@ -2,6 +2,7 @@ package com.hotel.mapper;
 
 import com.hotel.pojo.entity.Room;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -31,4 +32,12 @@ public interface RoomMapper {
      * @return
      */
     Room selectDetailById(@Param("id") Integer id);
+
+    /**
+     * 获取房间数量
+     *
+     * @return
+     */
+    @Select("SELECT COUNT(id) FROM t_room")
+    int getRoomCount();
 }

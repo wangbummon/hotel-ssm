@@ -321,17 +321,6 @@
                     <span class="bind-password icon icon-4"></span>
                 </div>
 
-                <div id="validatePanel" class="item" style="width: 137px;">
-                    <input type="text" name="captcha" placeholder="请输入验证码" maxlength="4">
-                    <img id="refreshCaptcha" class="validateImg"
-                         src="${pageContext.request.contextPath}/static/layui/images/captcha.jpg">
-                </div>
-
-            </div>
-            <div class="tip">
-                <input type="checkbox" name="remember-me" value="true" lay-skin="primary">
-                <span class="login-tip">保持登录</span>
-                <a href="javascript:" class="forget-password">忘记密码？</a>
             </div>
             <div class="layui-form-item" style="text-align:center; width:100%;height:100%;margin:0px;">
                 <button class="login-btn">立即登录</button>

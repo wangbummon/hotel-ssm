@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hotel.mapper.ChartsMapper">
+
+    <!--入住信息与房间、房型关系配置-->
+    <resultMap id="CheckinRoomResultMap" type="com.hotel.pojo.po.CheckinPO">
+        <association property="roomType" javaType="com.hotel.pojo.entity.RoomType">
+            <id column="id" property="id" jdbcType="INTEGER"/>
+            <result column="type_name" property="typeName" jdbcType="VARCHAR"/>
+            <result column="photo" property="photo" jdbcType="VARCHAR"/>
+            <result column="price" property="price" jdbcType="DECIMAL"/>
+        </association>
+    </resultMap>
+
+    <resultMap id="test" type="com.hotel.pojo.po.WeekPO">
+        <result column="typeName" property="typeName"/>
+        <result column="checkinCount" property="checkinCount"/>
+    </resultMap>
+</mapper>

@@ -1,3 +1,6 @@
+import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.hotel.pojo.entity.Floor;
 import com.hotel.pojo.entity.Permission;
 import com.hotel.pojo.entity.Role;
@@ -6,6 +9,7 @@ import com.hotel.pojo.po.RolePO;
 import com.hotel.pojo.vo.MenuNodeVO;
 import com.hotel.pojo.vo.RoleVO;
 import com.hotel.util.MyBeanUtils;
+import com.hotel.util.MyDateUtils;
 import com.hotel.util.UUIDUtils;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,7 +29,7 @@ public class Tests {
 
     @Test
     public void test1() throws IOException {
-        System.out.println(new BCryptPasswordEncoder().encode("123456"));
+        System.out.println(DateUtil.beginOfWeek(new Date(), true));
     }
 
 

@@ -14,6 +14,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/dist/css/layui.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/css/layui.css"
+          media="all">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/public.css" media="all">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/js/lay-module/step-lay/step.css"
+          media="all">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/global.css" charset="utf-8">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/global(1).css" charset="utf-8">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/store.css" charset="utf-8">
@@ -29,7 +34,8 @@
         <div class="layui-form component" lay-filter="LAY-site-header-component"></div>
         <ul class="layui-nav" id="layui-nav-userinfo">
             <li data-id="index" class="layui-nav-item layui-hide-xs">
-                <a class="fly-case-active" data-type="toTopNav" href="${pageContext.request.contextPath}/index.html">首页</a>
+                <a class="fly-case-active" data-type="toTopNav"
+                   href="${pageContext.request.contextPath}/index.html">首页</a>
             </li>
             <li data-id="room" class="layui-nav-item layui-hide-xs layui-this">
                 <a class="fly-case-active" data-type="toTopNav"
@@ -150,7 +156,7 @@
 <!-- 房间详情end -->
 
 
-<%-- 预订房间 --%>
+ 预订房间
 <div style="display: none;padding: 5px" id="orderRoomWindow">
     <form class="layui-form" style="width:90%;" id="dataFrm" lay-filter="dataFrm">
         <%-- 隐藏域，保存房间ID --%>
@@ -264,14 +270,50 @@
 
 <!-- 脚本开始 -->
 <script src="${pageContext.request.contextPath}/static/layui/dist/layui.js"></script>
+<script src="${pageContext.request.contextPath}/static/layui/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
 <script>
-    layui.use(["form", "element", "carousel", "layer", "laydate"], function () {
+    layui.use(["form", "element", "carousel", "layer", "laydate", "form", "step"], function () {
         var form = layui.form,
             layer = layui.layer,
             element = layui.element,
             carousel = layui.carousel,
             laydate = layui.laydate,
+            step = layui.step,
             $ = layui.$;
+
+        step.render({
+            elem: '#stepForm',
+            filter: 'stepForm',
+            width: '100%', //设置容器宽度
+            stepWidth: '750px',
+            height: '500px',
+            stepItems: [{
+                title: '填写预订信息'
+            }, {
+                title: '确认预订信息'
+            }, {
+                title: '完成'
+            }]
+        });
+
+
+        form.on('submit(formStep)', function (data) {
+            step.next('#stepForm');
+            return false;
+        });
+
+        form.on('submit(formStep2)', function (data) {
+            step.next('#stepForm');
+            return false;
+        });
+
+        $('.pre').click(function () {
+            step.pre('#stepForm');
+        });
+
+        $('.next').click(function () {
+            step.next('#stepForm');
+        });
 
         //将vip价格保留两位小数
         let vipPrice = $("#vipPrice").val() * 0.9;
@@ -339,7 +381,7 @@
                 content: $("#orderRoomWindow"),//引用的内容窗口
                 success: function () {
                     //清空表单数据
-                    $("#dataFrm")[0].reset();
+                    // $("#dataFrm")[0].reset();
                 }
             });
         });
@@ -354,7 +396,7 @@
                 contentType: 'application/json;charset=utf-8',
                 success: function (result) {
                     if (result.code === 0) {
-                        layer.alert(result.msg,function (data){
+                        layer.alert(result.msg, function (data) {
                             location.reload();
                         });
                     } else {

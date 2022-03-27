@@ -2,6 +2,7 @@ package com.hotel.mapper;
 
 import com.hotel.pojo.entity.Floor;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -52,4 +53,12 @@ public interface FloorMapper {
      * @return
      */
     List<Floor> selectFloorList(Floor floor);
+
+    /**
+     * 获取楼层数量
+     *
+     * @return
+     */
+    @Select("SELECT COUNT(id) FROM t_floor")
+    int getFloorCount();
 }

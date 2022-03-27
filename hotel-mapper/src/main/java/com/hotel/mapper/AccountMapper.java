@@ -1,6 +1,7 @@
 package com.hotel.mapper;
 
 import com.hotel.pojo.entity.Account;
+import com.hotel.pojo.po.AccountPO;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -62,4 +63,13 @@ public interface AccountMapper {
      */
     @Select("SELECT * FROM t_account WHERE login_name = #{loginName}")
     Account getAccountByName(@Param("loginName") String loginName);
+
+    /**
+     * 获取所有用户数量
+     *
+     * @param accountPO 前台用户PO
+     * @return
+     */
+    int getAccountCount(AccountPO accountPO);
+
 }

@@ -205,4 +205,19 @@
             </if>
         </where>
     </select>
+
+    <!--获取总盈利-->
+    <select id="getPriceCount" resultType="java.lang.Double">
+        SELECT IFNULL(sum(pay_price),0) FROM t_checkin
+        <where>
+            <if test="startDate!=null">
+                <![CDATA[ AND create_date >= #{startDate} ]]>
+            </if>
+            <if test="endDate!=null">
+                <![CDATA[ AND create_date <= #{endDate} ]]>
+            </if>
+        </where>
+    </select>
+
+    <!--获取盈利数额-->
 </mapper>

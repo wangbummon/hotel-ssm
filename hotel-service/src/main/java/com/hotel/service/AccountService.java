@@ -2,6 +2,7 @@ package com.hotel.service;
 
 import com.hotel.pojo.po.AccountPO;
 import com.hotel.pojo.vo.ResponseVO;
+import com.hotel.pojo.vo.CountVO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -20,8 +21,16 @@ public interface AccountService extends UserDetailsService {
 
     /**
      * 检查用户名是否已存在
+     *
      * @param loginName 前台用户用户名
      * @return
      */
     ResponseVO checkAccountNameExist(String loginName);
+
+    /**
+     * 获取前台用户数量及增长
+     *
+     * @return
+     */
+    CountVO getUserCount();
 }

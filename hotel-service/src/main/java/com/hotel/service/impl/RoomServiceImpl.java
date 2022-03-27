@@ -3,10 +3,13 @@ package com.hotel.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.hotel.mapper.FloorMapper;
 import com.hotel.mapper.RoomMapper;
+import com.hotel.mapper.RoomTypeMapper;
 import com.hotel.pojo.entity.Room;
 import com.hotel.pojo.enums.RedisKeyEnums;
 import com.hotel.pojo.po.RoomPO;
+import com.hotel.pojo.vo.CountVO;
 import com.hotel.pojo.vo.RoomVO;
 import com.hotel.pojo.vo.ResponseVO;
 import com.hotel.service.RoomService;
@@ -33,6 +36,8 @@ import java.util.List;
 public class RoomServiceImpl implements RoomService {
 
     private final RoomMapper roomMapper;
+    private final RoomTypeMapper roomTypeMapper;
+    private final FloorMapper floorMapper;
 
     private final Jedis jedis = JedisPoolUtils.getJedis();
 
@@ -141,5 +146,25 @@ public class RoomServiceImpl implements RoomService {
         Room room = new Room();
         MyBeanUtils.copyProperties(roomPO, room);
         return roomMapper.getRoomList(room);
+    }
+
+    /**
+     * 获取房间数量及房型、楼层数量
+     *
+     * @return
+     */
+    @Override
+    public CountVO getRoomCount() {
+        //查询房间数量
+        int roomCount = roomMapper.getRoomCount();
+        //查询房型数量
+        int roomTypeCount = roomTypeMapper.getRoomTypeCount();
+        //获取楼层数量
+        int floorCount = floorMapper.getFloorCount();
+        return CountVO.builder()
+                .allCount(String.valueOf(roomCount))
+                .yesterdayAdd(String.valueOf(roomTypeCount))
+                .weekAdd(String.valueOf(floorCount))
+                .build();
     }
 }
