@@ -26,8 +26,8 @@ public class UsersController {
 
     @ApiOperation("查询用户列表")
     @GetMapping("/users")
-    public ResponseVO getUsers(UsersPO params,HttpServletRequest request) {
-        return usersService.getUser(params,request);
+    public ResponseVO getUsers(UsersPO params, HttpServletRequest request) {
+        return usersService.getUser(params, request);
     }
 
     @ApiOperation("新增用户")
@@ -41,7 +41,13 @@ public class UsersController {
     @PutMapping("/users/{id}")
     public ResponseVO modifyUsers(@RequestBody UsersPO params,
                                   HttpServletRequest request) {
-        return usersService.modifyUsers(params,request);
+        return usersService.modifyUsers(params, request);
+    }
+
+    @ApiOperation("修改登录账号密码")
+    @PutMapping("/user/pwd")
+    public ResponseVO updateLoginUserPwd(@RequestBody UsersPO params, HttpServletRequest request) {
+        return usersService.updateLoginUserPwd(params, request);
     }
 
     @ApiOperation("删除用户")
@@ -66,5 +72,17 @@ public class UsersController {
     @PostMapping("/userRoles/{userId}")
     public ResponseVO saveUserRoles(@RequestBody UserRolePO params) {
         return usersService.saveUserRoles(params);
+    }
+
+    @ApiOperation("查看登陆账号基本信息")
+    @GetMapping("/user/detail")
+    public ResponseVO getLoginUserDetail(HttpServletRequest request){
+        return usersService.getLoginUserDetail(request);
+    }
+
+    @ApiOperation("修改个人信息")
+    @PutMapping("/user/detail")
+    public ResponseVO updateLoginUserDetail(@RequestBody UsersPO usersPO,HttpServletRequest request){
+        return usersService.updateLoginUserDetail(usersPO,request);
     }
 }

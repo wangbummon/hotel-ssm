@@ -119,20 +119,15 @@ public class AccountServiceImpl implements AccountService {
         accountPO.setStartTime(yesterdayBegin);
         Date yesterdayEnd = MyDateUtils.getYesterdayEnd();
         accountPO.setEndTime(yesterdayEnd);
-        //查询昨日之前的用户数量
-        int yesterdayCount = accountMapper.getAccountCount(accountPO);
-
-        //昨日增加
-        int yesterdayAdd = allUserCount - yesterdayCount;
+        //查询昨日增加的用户数量
+        int yesterdayAdd = accountMapper.getAccountCount(accountPO);
 
 
         //获取七天前开始时间
         Date offsetEnd = MyDateUtils.get7daysEnd();
         accountPO.setEndTime(offsetEnd);
-        //查询七天前用户数量
-        int weekCount = accountMapper.getAccountCount(accountPO);
-        //七日增加
-        int weekAdd = allUserCount - weekCount;
+        //查询七天增加的用户数量
+        int weekAdd = accountMapper.getAccountCount(accountPO);
 
         //返回数据
         return CountVO.builder()

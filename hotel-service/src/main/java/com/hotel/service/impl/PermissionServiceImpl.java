@@ -46,7 +46,7 @@ public class PermissionServiceImpl implements PermissionService {
 
 
     /**
-     * 查询所有菜单
+     * 根据用户角色查询菜单
      *
      * @param params  菜单PO
      * @param request
@@ -78,7 +78,7 @@ public class PermissionServiceImpl implements PermissionService {
         homeInfo.put("title", "首页");
         homeInfo.put("href", "/admin/desktop");
         //保存logoInfo对象信息
-        logoInfo.put("title", "酒店后台管理系统");
+        logoInfo.put("title", "酒店后台管理");
         logoInfo.put("image", "/static/images/logo.png");
         logoInfo.put("href", "/index.jsp");
         //保存menuInfo对象信息

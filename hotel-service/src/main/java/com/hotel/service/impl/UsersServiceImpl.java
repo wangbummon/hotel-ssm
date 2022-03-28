@@ -1,7 +1,5 @@
 package com.hotel.service.impl;
 
-import cn.hutool.core.date.DateTime;
-import cn.hutool.core.date.DateUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.hotel.mapper.UserRoleMapper;
@@ -24,6 +22,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -225,5 +224,65 @@ public class UsersServiceImpl implements UsersService {
         userRoleMapper.deleteUsersRoleByUserIds(userIds);
         boolean remove = usersMapper.removeUsers(userIds);
         return CheckUtils.checkSuccess(remove);
+    }
+
+    /**
+     * 修改当前登录用户的密码
+     *
+     * @param usersPO 用户PO
+     * @param request
+     * @return
+     */
+    @Override
+    public ResponseVO updateLoginUserPwd(UsersPO usersPO, HttpServletRequest request) {
+        //获取当前登录用户信息
+        Users user = usersMapper.getUserByUsername(request.getUserPrincipal().getName());
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        //比对密码是否一致，一致则执行更新方法 否则返回错误信息
+        if (encoder.matches(usersPO.getOldPwd(), user.getPassword())) {
+            //比对成功执行更新操作
+            user.setPassword(encoder.encode(usersPO.getNewPwd()));
+            boolean update = usersMapper.updateByPrimaryKey(user);
+            return CheckUtils.checkSuccess(update);
+        }
+        return ResponseUtils.failed("原密码错误，请检查后重试！");
+    }
+
+    /**
+     * 获取当前登录账号的详细信息
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public ResponseVO getLoginUserDetail(HttpServletRequest request) {
+        String username = request.getUserPrincipal().getName();
+        Users user = usersMapper.getUserByUsername(username);
+        if (user == null) {
+            return ResponseUtils.failed("用户名不存在");
+        }
+        UsersVO usersVO = new UsersVO();
+        MyBeanUtils.copyProperties(user, usersVO);
+
+        return ResponseUtils.success(usersVO);
+    }
+
+    /**
+     * 修改当前登录用户的基本信息
+     *
+     * @param usersPO 用户PO
+     * @param request
+     * @return
+     */
+    @Override
+    public ResponseVO updateLoginUserDetail(UsersPO usersPO, HttpServletRequest request) {
+        Integer userId = usersMapper.getUserByUsername(request.getUserPrincipal().getName()).getId();
+        usersPO.setId(userId);
+        Users users = new Users();
+        MyBeanUtils.copyProperties(usersPO, users);
+        users.setModifyUser(userId);
+        users.setModifyDate(new Date());
+        boolean update = usersMapper.updateByPrimaryKey(users);
+        return CheckUtils.checkSuccess(update);
     }
 }

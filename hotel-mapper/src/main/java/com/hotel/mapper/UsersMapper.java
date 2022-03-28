@@ -87,6 +87,5 @@ public interface UsersMapper {
      * @param username 用户名
      * @return
      */
-    @Select("SELECT * FROM sys_users WHERE username = #{username}")
     Users getUserByUsername(String username);
 }

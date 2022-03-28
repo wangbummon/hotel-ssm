@@ -1,5 +1,6 @@
 package com.hotel.mapper;
 
+import cn.hutool.core.date.DateTime;
 import com.hotel.pojo.entity.Checkin;
 
 import java.util.Date;
@@ -54,4 +55,23 @@ public interface CheckinMapper {
      */
     @Select("SELECT COUNT(id) FROM t_checkin WHERE room_type_id = #{roomTypeId}")
     int getCheckinByRoomType(@Param("roomTypeId") Integer roomTypeId);
+
+    /**
+     * 根据房型id查询本年度每月盈利数额
+     *
+     * @param roomTypeId 房型id
+     * @param year       今年的字符串
+     * @return
+     */
+    List<Double> getMonthForYearPriceByRoomType(@Param("roomTypeId") Integer roomTypeId, @Param("year") String year);
+
+    /**
+     * 根据房型id获取某天营业额
+     *
+     * @param id    房型id
+     * @param begin 开始 时间
+     * @param end   结束时间
+     * @return
+     */
+    Double getRoomTypeWeekPrice(@Param("id") Integer id, @Param("begin") Date begin, @Param("end") DateTime end);
 }

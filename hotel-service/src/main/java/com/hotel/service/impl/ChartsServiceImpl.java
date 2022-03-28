@@ -6,8 +6,6 @@ import com.hotel.mapper.ChartsMapper;
 import com.hotel.mapper.CheckinMapper;
 import com.hotel.mapper.RoomTypeMapper;
 import com.hotel.pojo.entity.RoomType;
-import com.hotel.pojo.enums.WeekEnums;
-import com.hotel.pojo.po.WeekPO;
 import com.hotel.service.ChartsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -86,6 +84,65 @@ public class ChartsServiceImpl implements ChartsService {
         }
         data.put("typeNames", typeNames);
         data.put("checkinCounts", checkinCounts);
+        return data;
+    }
+
+    /**
+     * 获取月度房型盈利占比
+     *
+     * @return
+     */
+    @Override
+    public Map<Object, Object> getPriceByRoomType() {
+        Map<Object, Object> data = new HashMap<>();
+        //存放房型金额
+        List<List<Double>> prices = new ArrayList<>();
+
+        //获取今年年数
+        String yearStr = String.valueOf(DateUtil.year(new Date()));
+        //查询所有房型
+        List<RoomType> roomTypes = roomTypeMapper.selectAll();
+        //获取房型名
+        List<String> typeNames = roomTypes.stream().map(RoomType::getTypeName).collect(Collectors.toList());
+        data.put("typeNames", typeNames);
+        roomTypes.forEach(item -> {
+            List<Double> monthForYearPrice = checkinMapper.getMonthForYearPriceByRoomType(item.getId(), yearStr);
+            prices.add(monthForYearPrice);
+        });
+        data.put("checkinPrices", prices);
+
+        return data;
+    }
+
+    /**
+     * 获取每种房型周盈利
+     *
+     * @return
+     */
+    @Override
+    public Map<Object, Object> getRoomTypeWeekPrice() {
+        Map<Object, Object> data = new HashMap<>();
+        List<List<Double>> prices = new ArrayList<>();
+        //查询所有房型
+        List<RoomType> roomTypes = roomTypeMapper.selectAll();
+        //获取房型名
+        List<String> typeNames = roomTypes.stream().map(RoomType::getTypeName).collect(Collectors.toList());
+        data.put("typeNames", typeNames);
+        //获取本周开始与结束时间
+        Date beginOfWeek = DateUtil.beginOfWeek(new Date(), true);
+        Date endOfWeek = DateUtil.endOfDay(beginOfWeek);
+        //循环出一周七天的时间并查询
+        for (RoomType roomType : roomTypes) {
+            List<Double> weekPrice = new ArrayList<>();
+            for (int i = 0; i < 7; i++) {
+                Date begin = DateUtil.offsetDay(beginOfWeek, i);
+                DateTime end = DateUtil.endOfDay(begin);
+                Double roomTypePrice = checkinMapper.getRoomTypeWeekPrice(roomType.getId(), begin, end);
+                weekPrice.add(roomTypePrice);
+            }
+            prices.add(weekPrice);
+        }
+        data.put("prices", prices);
         return data;
     }
 }

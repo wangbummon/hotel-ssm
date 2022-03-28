@@ -124,4 +124,13 @@ public class PageController {
     public String desktop() {
         return "desktop";
     }
+
+    /**
+     * 用户基本信息
+     */
+    @ApiOperation("跳转至用户基本信息页面")
+    @RequestMapping("/userSetting")
+    public String resetPwd() {
+        return "userSetting";
+    }
 }

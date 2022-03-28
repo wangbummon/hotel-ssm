@@ -219,5 +219,72 @@
         </where>
     </select>
 
-    <!--获取盈利数额-->
+    <!--根据房型id获取本年度每月盈利-->
+    <select id="getMonthForYearPriceByRoomType" resultType="java.lang.Double">
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '01')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '02')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '03')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '04')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '05')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '06')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '07')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '08')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '09')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '10')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '11')
+          AND room_type_id = #{roomTypeId}
+        UNION ALL
+        SELECT IFNULL(sum(pay_price), 0)
+        FROM t_checkin
+        WHERE DATE_FORMAT(create_date, '%Y%m') = CONCAT(#{year}, '12')
+          AND room_type_id = #{roomTypeId}
+    </select>
+    <select id="getRoomTypeWeekPrice" resultType="java.lang.Double">
+        SELECT IFNULL(SUM(pay_price), 0)
+        FROM t_checkin
+        WHERE id = #{id}
+          AND (create_date BETWEEN #{begin} AND #{end})
+    </select>
 </mapper>

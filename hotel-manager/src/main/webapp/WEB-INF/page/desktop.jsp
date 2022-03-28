@@ -7,6 +7,7 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
     <script src="${pageContext.request.contextPath}/static/echarts/echarts.js"></script>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/css/layui.css"
           media="all">
@@ -121,20 +122,21 @@
     </div>
 
 
-<%--    <div class="layui-row layui-col-space15">--%>
-<%--        <div class="layui-col-xs12 layui-col-md6">--%>
-<%--            <div id="echarts-dataset" style="background-color:#ffffff;min-height:300px;padding: 10px"></div>--%>
-<%--        </div>--%>
-<%--        <div class="layui-col-xs12 layui-col-md6">--%>
-<%--            <div id="echarts-map" style="background-color:#ffffff;min-height:300px;padding: 10px"></div>--%>
-<%--        </div>--%>
-<%--    </div>--%>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-xs12 layui-col-md6">
+            <div id="echarts-dataset" style="background-color:#ffffff;min-height:300px;padding: 10px"></div>
+        </div>
+        <div class="layui-col-xs12 layui-col-md6">
+            <div id="echarts-map" style="background-color:#ffffff;min-height:300px;padding: 10px"></div>
+        </div>
+    </div>
 
 
 </div>
 <!--</div>-->
 <script src="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="${pageContext.request.contextPath}/static/layui/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+<%--<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>--%>
 <script>
     layui.use(['layer', 'echarts'], function () {
         var $ = layui.jquery,
@@ -161,8 +163,8 @@
             data: {},
             success: function (result) {
                 $("#allPriceCount").text(result.allCount);
-                $("#priceCompareWithYesterday").text("▲ " + result.yesterdayAdd);
-                $("#priceCompareWithWeek").text("▲ " + result.weekAdd);
+                $("#priceCompareWithYesterday").text("▲ " + result.yesterdayAdd + " 元");
+                $("#priceCompareWithWeek").text("▲ " + result.weekAdd + " 元");
             }
         });
 
@@ -183,7 +185,8 @@
          * 渲染开始
          */
 
-        let echartsRecords;
+        let echartsRecords = echarts.init(document.getElementById('echarts-records'), 'walden');
+        echartsRecords.showLoading();
         //渲染本周入住信息报表
         $.ajax({
             url: "/admin/charts/checkin/week",
@@ -203,8 +206,6 @@
                         data: weekCount[i]
                     })
                 }
-
-                echartsRecords = echarts.init(document.getElementById('echarts-records'), 'walden');
 
                 var optionRecords = {
                     title: {
@@ -248,17 +249,19 @@
                     ],
                     series: series
                 };
+                echartsRecords.hideLoading();
                 echartsRecords.setOption(optionRecords);
             }
         });
 
+        var echartsPies = echarts.init(document.getElementById('echarts-pies'), 'walden');
+        echartsPies.showLoading();
         //渲染入住房型占比玫瑰图
         $.ajax({
             url: "/admin/charts/checkin/roomTypeCount",
             type: "GET",
             data: {},
             success: function (result) {
-                console.log(result)
                 let typeNames = result.typeNames,
                     checkinCounts = result.checkinCounts;
                 let dataMap = [];
@@ -268,9 +271,7 @@
                     kvArr.value = checkinCounts[i];
                     dataMap.push(kvArr);
                 }
-                console.log(dataMap)
 
-                var echartsPies = echarts.init(document.getElementById('echarts-pies'), 'walden');
                 var optionPies = {
                     title: {
                         text: '入住房型占比',
@@ -303,6 +304,7 @@
                         }
                     ]
                 };
+                echartsPies.hideLoading();
                 echartsPies.setOption(optionPies);
             }
         });
@@ -311,18 +313,75 @@
         /**
          * 柱状图
          */
+        var echartsDataset = echarts.init(document.getElementById('echarts-dataset'), 'walden');
+        var option;
+
+        $.ajax({
+            url: "/admin/charts/price/week",
+            type: "GET",
+            data: {},
+            success: function (res) {
+                console.log(res)
+                let typeNames = res.typeNames,
+                    prices = res.prices;
+                let series = [];
+                for (let i = 0; i < typeNames.length; i++) {
+                    series.push({
+                        name: typeNames[i],
+                        type: 'bar',
+                        stack: 'total',
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: prices[i]
+                    })
+                }
+                option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            // Use axis to trigger tooltip
+                            type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+                        }
+                    },
+                    legend: {},
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'value',
+                        minInterval: 1
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                    },
+                    series: series
+                };
+
+                option && echartsDataset.setOption(option);
+            }
+        });
+
+
         // var echartsDataset = echarts.init(document.getElementById('echarts-dataset'), 'walden');
         //
         // var optionDataset = {
         //     legend: {},
         //     tooltip: {},
         //     dataset: {
-        //         dimensions: ['product', '2015', '2016', '2017'],
+        //         dimensions: ['product', '2018', '2020', '2021'],
         //         source: [
-        //             {product: 'Matcha Latte', '2015': 43.3, '2016': 85.8, '2017': 93.7},
-        //             {product: 'Milk Tea', '2015': 83.1, '2016': 73.4, '2017': 55.1},
-        //             {product: 'Cheese Cocoa', '2015': 86.4, '2016': 65.2, '2017': 82.5},
-        //             {product: 'Walnut Brownie', '2015': 72.4, '2016': 53.9, '2017': 39.1}
+        //             {product: '单间', '2021': 43.3, '2020': 85.8, '2018': 93.7},
+        //             {product: '标间', '2021': 83.1, '2020': 73.4, '2018': 55.1},
+        //             {product: '豪华套房', '2021': 86.4, '2020': 65.2, '2018': 82.5},
+        //             // {product: 'Walnut Brownie', '2021': 72.4, '2020': 53.9, '2018': 39.1}
         //         ]
         //     },
         //     xAxis: {type: 'category'},
@@ -340,52 +399,99 @@
 
 
         /**
-         * 中国地图
+         * 渲染房型盈利占比
          */
-        // var echartsMap = echarts.init(document.getElementById('echarts-map'), 'walden');
-        //
-        //
-        // var optionMap = {
-        //     legend: {},
-        //     tooltip: {
-        //         trigger: 'axis',
-        //         showContent: false
-        //     },
-        //     dataset: {
-        //         source: [
-        //             ['product', '2012', '2013', '2014', '2015', '2016', '2017'],
-        //             ['Matcha Latte', 41.1, 30.4, 65.1, 53.3, 83.8, 98.7],
-        //             ['Milk Tea', 86.5, 92.1, 85.7, 83.1, 73.4, 55.1],
-        //             ['Cheese Cocoa', 24.1, 67.2, 79.5, 86.4, 65.2, 82.5],
-        //             ['Walnut Brownie', 55.2, 67.1, 69.2, 72.4, 53.9, 39.1]
-        //         ]
-        //     },
-        //     xAxis: {type: 'category'},
-        //     yAxis: {gridIndex: 0},
-        //     grid: {top: '55%'},
-        //     series: [
-        //         {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-        //         {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-        //         {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-        //         {type: 'line', smooth: true, seriesLayoutBy: 'row'},
-        //         {
-        //             type: 'pie',
-        //             id: 'pie',
-        //             radius: '30%',
-        //             center: ['50%', '25%'],
-        //             label: {
-        //                 formatter: '{b}: {@2012} ({d}%)'
-        //             },
-        //             encode: {
-        //                 itemName: 'product',
-        //                 value: '2012',
-        //                 tooltip: '2012'
-        //             }
-        //         }
-        //     ]
-        // };
-        //
-        // echartsMap.setOption(optionMap);
+        var echartsMap = echarts.init(document.getElementById('echarts-map'), 'walden');
+        echartsMap.showLoading();
+        $.ajax({
+            url: "/admin/charts/checkin/price",
+            type: "GET",
+            date: {},
+            success: function (res) {
+                let checkinPrices = res.checkinPrices,
+                    typeNames = res.typeNames;
+                let dataArr = [];
+                dataArr.push(['product', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'])
+                for (let i = 0; i < typeNames.length; i++) {
+                    let itemArr = [];
+                    itemArr.push(typeNames[i]);
+                    for (let j = 0; j < checkinPrices[i].length; j++) {
+                        itemArr.push(checkinPrices[i][j]);
+                    }
+                    dataArr.push(itemArr);
+                }
+                let series = [];
+                for (let i = 0; i < typeNames.length; i++) {
+                    series.push({
+                        type: 'line',
+                        smooth: true,
+                        seriesLayoutBy: 'row',
+                        emphasis: {focus: 'series'}
+                    })
+                }
+                series.push({
+                    type: 'pie',
+                    id: 'pie',
+                    radius: '30%',
+                    center: ['50%', '25%'],
+                    emphasis: {
+                        focus: 'self'
+                    },
+                    label: {
+                        formatter: '{b}: {@1月} ({d}%)'
+                    },
+                    encode: {
+                        itemName: 'product',
+                        value: '1月',
+                        tooltip: '1月'
+                    }
+                })
+                var app = {};
+
+                var option;
+
+                setTimeout(function () {
+                    option = {
+                        legend: {},
+                        tooltip: {
+                            trigger: 'axis',
+                            showContent: false
+                        },
+                        dataset: {
+                            source: dataArr
+                        },
+                        xAxis: {type: 'category'},
+                        yAxis: {gridIndex: 0},
+                        grid: {top: '10%'},
+                        series: series
+                    };
+                    echartsMap.on('updateAxisPointer', function (event) {
+                        const xAxisInfo = event.axesInfo[0];
+                        if (xAxisInfo) {
+                            const dimension = xAxisInfo.value + 1;
+                            echartsMap.setOption({
+                                series: {
+                                    id: 'pie',
+                                    label: {
+                                        formatter: '{b}: {@[' + dimension + ']} ({d}%)'
+                                    },
+                                    encode: {
+                                        value: dimension,
+                                        tooltip: dimension
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    echartsMap.hideLoading();
+                    echartsMap.setOption(option);
+                });
+
+                if (option && typeof option === 'object') {
+                    echartsMap.setOption(option);
+                }
+            }
+        });
 
 
         // echarts 窗口缩放自适应

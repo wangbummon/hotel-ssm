@@ -67,4 +67,26 @@ public interface UsersService extends UserDetailsService {
      */
     ResponseVO removeUsers(String ids);
 
+    /**
+     * 修改当前登录用户的密码
+     * @param usersPO 用户PO
+     * @param request
+     * @return
+     */
+    ResponseVO updateLoginUserPwd(UsersPO usersPO, HttpServletRequest request);
+
+    /**
+     * 获取当前登录账号的详细信息
+     * @param request
+     * @return
+     */
+    ResponseVO getLoginUserDetail(HttpServletRequest request);
+
+    /**
+     * 修改个人信息
+     * @param usersPO 用户PO
+     * @param request
+     * @return
+     */
+    ResponseVO updateLoginUserDetail(UsersPO usersPO, HttpServletRequest request);
 }

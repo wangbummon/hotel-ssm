@@ -1,7 +1,7 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html style="height: 100%">
 <head>
     <meta charset="utf-8">
     <title>酒店后台管理系统</title>
@@ -12,19 +12,30 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="format-detection" content="telephone=no">
-    <link rel="icon" href="${pageContext.request.contextPath}/static/images/manager.ico">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/css/layui.css" media="all">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/layuimini.css?v=2.0.4.2" media="all">
+    <link rel="icon" href="${pageContext.request.contextPath}/static/images/logo.png">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/css/layui.css"
+          media="all">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/layuimini.css?v=2.0.4.2"
+          media="all">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/css/themes/default.css" media="all">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/layui/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet"
+          href="${pageContext.request.contextPath}/static/layui/lib/font-awesome-4.7.0/css/font-awesome.min.css"
+          media="all">
     <!--[if lt IE 9]>
-    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
-    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/html5.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/respond.min.js"></script>
     <![endif]-->
     <style id="layuimini-bg-color">
     </style>
+    <style>
+        .layui-form-item .layui-input-company {
+            width: auto;
+            padding-right: 10px;
+            line-height: 38px;
+        }
+    </style>
 </head>
-<body class="layui-layout-body layuimini-all">
+<body class="layui-layout-body layuimini-all" style="height: 100%; margin: 0">
 <div class="layui-layout layui-layout-admin">
 
     <div class="layui-header header">
@@ -60,21 +71,24 @@
                     <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
                 </li>
                 <li class="layui-nav-item layuimini-setting">
-                    <a href="javascript:;"><security:authentication property="name" /></a>
+                    <a href="javascript:;"><security:authentication property="name"/></a>
                     <dl class="layui-nav-child">
                         <dd>
-                            <a href="javascript:;" layuimini-content-href="${pageContext.request.contextPath}/static/layui/page/user-setting.html" data-title="基本资料"
+                            <a href="javascript:;"
+                               layuimini-content-href="${pageContext.request.contextPath}/admin/userSetting"
+                               data-title="基本资料"
                                data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
                         </dd>
                         <dd>
-                            <a href="javascript:;" layuimini-content-href="page/user-password.html" data-title="修改密码"
+                            <%--                            layuimini-content-href="/admin/resetPwd"--%>
+                            <a href="javascript:;" id="reset" data-title="修改密码"
                                data-icon="fa fa-gears">修改密码</a>
                         </dd>
                         <dd>
                             <hr>
                         </dd>
                         <dd>
-                            <a href="/admin/user/logout" class="login-out">退出登录</a>
+                            <a href="${pageContext.request.contextPath}/admin/user/logout" class="login-out">退出登录</a>
                         </dd>
                     </dl>
                 </li>
@@ -126,17 +140,69 @@
                 <div id="layuiminiHomeTabIframe" class="layui-tab-item layui-show"></div>
             </div>
         </div>
+    </div>
 
+    <div style="display: none;padding: 5px" id="resetWindow">
+        <form class="layui-form" style="width:90%;" id="dataFrm" lay-filter="dataFrm">
+            <div class="layui-col-md12 layui-col-xs12">
+                <div class="layui-form-item">
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-md12 layui-col-xs7">
+                            <div class="layui-form-item magt3" style="margin-top: 8px;">
+                                <label class="layui-form-label required">旧的密码</label>
+                                <div class="layui-input-block">
+                                    <input type="password" name="oldPwd" id="oldPwd" lay-verify="required"
+                                           lay-reqtext="旧的密码不能为空"
+                                           placeholder="请输入旧的密码" value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label required">新的密码</label>
+                                <div class="layui-input-block">
+                                    <input type="password" name="newPwd" id="newPwd" lay-verify="required"
+                                           lay-reqtext="新的密码不能为空"
+                                           placeholder="请输入新的密码" value="" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label required">新的密码</label>
+                                <div class="layui-input-block">
+                                    <input type="password" name="againPwd" id="againPwd" lay-verify="required"
+                                           lay-reqtext="新的密码不能为空"
+                                           placeholder="请输入新的密码" value="" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item magt3">
+                    <div class="layui-input-block" style="text-align: center;">
+                        <button type="button" class="layui-btn" lay-submit lay-filter="doAdd"
+                                id="doAdd"><span
+                                class="layui-icon layui-icon-add-1"></span>提交
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-warm"><span
+                                class="layui-icon layui-icon-refresh-1"></span>重置
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
 <script src="${pageContext.request.contextPath}/static/layui/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script src="${pageContext.request.contextPath}/static/layui/js/lay-config.js?v=2.0.0" charset="utf-8"></script>
+
+
+<script type="text/javascript" src="${pageContext.request.contextPath}/static/layui/js/lay-module/echarts/echarts.min.js"></script>
 <script>
-    layui.use(['jquery', 'layer', 'miniAdmin', 'miniTongji'], function () {
+    layui.use(['jquery', 'layer', 'miniAdmin', 'miniTongji', 'form'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
             miniAdmin = layui.miniAdmin,
+            form = layui.form,
             miniTongji = layui.miniTongji;
+
 
         var options = {
             iniUrl: "${pageContext.request.contextPath}/admin/menu/getMenuByUser",    // 初始化接口
@@ -151,6 +217,36 @@
         };
         miniAdmin.render(options);
 
+        $("#againPwd").blur(function () {
+            let newPwd = $("#newPwd").val(),
+                againPwd = $("#againPwd").val();
+            if (newPwd !== againPwd) {
+                flag = true;
+                layer.tips("两次输入的密码不一致！", '#againPwd',{
+                    tips:2
+                });
+            }
+        })
+
+        //监听提交
+        form.on('submit(resetPwd)', function (data) {
+            if (flag) {
+                layer.tips("两次输入的密码不一致！", '#againPwd',{
+                    tips:2
+                });
+            } else {
+                $.ajax({
+                    url: "/admin/user/pwd",
+                    data: JSON.stringify(data.field),
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    success: {}
+                })
+            }
+            return false;
+        });
+
+
         // 百度统计代码，只统计指定域名
         miniTongji.render({
             specific: true,
@@ -159,6 +255,46 @@
                 'layuimini.99php.cn',
                 'layuimini-onepage.99php.cn',
             ],
+        });
+
+        $('#reset').on("click", function () {
+            mainIndex = layer.open({
+                type: 1,
+                title: "添加房间",
+                area: ["500px", "350px"],
+                // maxmin: true,
+                content: $("#resetWindow"),
+                success: function () {
+                    $("#dataFrm")[0].reset();
+                }
+            });
+            // layer.full(mainIndex);
+        });
+
+        /**
+         * 监听新增提交事件
+         */
+        form.on('submit(resetPwdBtn)', function (data) {
+            // layedit.sync(detailIndex);
+            $.ajax({
+                url: "/admin/user/pwd",
+                type: "POST",
+                data: JSON.stringify(data.field),
+                dataType: 'json',
+                contentType: 'application/json;charset=utf-8',
+                success: function (result) {
+                    if (result.code === 0) {
+                        layer.msg(result.msg)
+                        //数据刷新
+                        tableIns.reload();
+                        //关闭当前窗口
+                        layer.close(mainIndex);
+                    } else {
+                        layer.msg(result.msg)
+                    }
+                }
+            })
+            return false;
         });
 
         $('.login-out').on("click", function () {

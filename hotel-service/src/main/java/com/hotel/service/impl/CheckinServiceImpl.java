@@ -117,8 +117,7 @@ public class CheckinServiceImpl implements CheckinService {
         checkinPO.setEndDate(yesterdayEnd);
         //查询昨日盈利
         double yesterdayPrice = checkinMapper.getPriceCount(checkinPO);
-        double priceYesterday = priceCount - yesterdayPrice;
-        countVO.setYesterdayAdd(String.valueOf(priceYesterday));
+        countVO.setYesterdayAdd(String.valueOf(yesterdayPrice));
 
         //获取七天前开始时间
         Date weekDaysBegin = MyDateUtils.get7daysBegin();

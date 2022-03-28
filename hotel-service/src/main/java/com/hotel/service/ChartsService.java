@@ -21,4 +21,17 @@ public interface ChartsService {
      * @return
      */
     Map<Object, Object> getRoomTypeCountByCheckin();
+
+    /**
+     * 获取每种房型的月度盈利
+     * @return
+     */
+    Map<Object, Object> getPriceByRoomType();
+
+    /**
+     * 获取每种房型本周盈利
+     * @return
+     */
+    Map<Object, Object> getRoomTypeWeekPrice();
+
 }

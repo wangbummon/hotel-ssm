@@ -233,4 +233,24 @@
             </if>
         </where>
     </select>
+    <select id="getUserByUsername" resultMap="BaseResultMap">
+        SELECT id,
+               username,
+               password,
+               real_name,
+               sex,
+               dept_id,
+               status,
+               email,
+               phone,
+               user_type,
+               hire_date,
+               created_user,
+               created_date,
+               modify_user,
+               modify_date,
+               remark
+        FROM sys_users
+        WHERE username = #{username}
+    </select>
 </mapper>

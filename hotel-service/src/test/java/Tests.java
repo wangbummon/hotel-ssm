@@ -29,7 +29,8 @@ public class Tests {
 
     @Test
     public void test1() throws IOException {
-        System.out.println(DateUtil.beginOfWeek(new Date(), true));
+        int year = DateUtil.year(new Date());
+        System.out.println(year);
     }
 
 

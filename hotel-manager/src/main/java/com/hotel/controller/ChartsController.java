@@ -35,4 +35,16 @@ public class ChartsController {
     public Map<Object, Object> getRoomTypeCountByCheckin() {
         return chartsService.getRoomTypeCountByCheckin();
     }
+
+    @ApiOperation("获取每种房型本周盈利")
+    @GetMapping("/price/week")
+    public Map<Object,Object> getRoomTypeWeekPrice(){
+        return chartsService.getRoomTypeWeekPrice();
+    }
+
+    @ApiOperation("获取每种房型月度盈利占比")
+    @GetMapping("/checkin/price")
+    public Map<Object, Object> getPriceByRoomType(){
+        return chartsService.getPriceByRoomType();
+    }
 }

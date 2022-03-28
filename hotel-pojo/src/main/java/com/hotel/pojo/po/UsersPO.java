@@ -54,5 +54,10 @@ public class UsersPO extends Users {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private String endDate;
 
+    @ApiModelProperty("原用户密码")
+    private String oldPwd;
+
+    @ApiModelProperty("要修改的密码")
+    private String newPwd;
 
 }
